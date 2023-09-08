@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.usermanagement.entities.User;
 import com.usermanagement.model.UserForm;
@@ -40,11 +41,31 @@ public class FormController {
 		user.setFirstName(userForm.getFirstName());
 		user.setLastName(userForm.getLastName());
 		user.setGender(userForm.getGender());
+		//String hashedPassword=DOMCryptoBinary.hashpw(user.getPassword(),DCrypt.gensalt(12));
 		user.setPassword(userForm.getPassword());
 		user.setProfession(userForm.getProfession());
 		user.setEmail(userForm.getEmail());
 		userRepository.save(user);
 		return "register-success";
+	}
+	
+	@GetMapping("/loginPage")
+	public String loginPage(UserForm userForm) {
+		return "loginPage";
+	}
+	
+	
+	@PostMapping("/login")
+	public String loginProcess(@RequestParam("firstName") String firstName,
+			@RequestParam("password") String password) {
+		
+		User u = userRepository.findByFirstName(firstName);
+		return "todos";
+	}
+	
+	@GetMapping("/")
+	public String show() {
+		return "home";
 	}
 
 }
