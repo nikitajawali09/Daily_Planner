@@ -26,7 +26,6 @@ public class TodoController {
 		this.todoService = todoService;
 	}
 
-	// Build Add Todo REST API
 	@PostMapping("/addNewTodo")
 	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
 
@@ -36,7 +35,6 @@ public class TodoController {
 		return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
 	}
 
-	// Build Get Todo REST API
 	@GetMapping("/getTodoById/{id}")
 	public ResponseEntity<TodoDto> getTodoById(@Valid @PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: getTodoById");
@@ -45,7 +43,6 @@ public class TodoController {
 		return new ResponseEntity<>(todoDto, HttpStatus.OK);
 	}
 
-	// Build Get All Todos REST API
 	@GetMapping("/getAllTodos")
 	public ResponseEntity<List<TodoDto>> getAllTodos() {
 		log.info("Entering into TodoController :: getAllTodos");
@@ -55,15 +52,14 @@ public class TodoController {
 	}
 
 	// Build Update Todo REST API
-	@PutMapping("{id}")
-	public ResponseEntity<TodoDto> updateTodo(@RequestBody TodoDto todoDto, @PathVariable("id") Long todoId) {
-		log.info("Entering into TodoController :: updateTodo");
-		TodoDto updatedTodo = todoService.updateTodo(todoDto, todoId);
-		log.info("Exiting into TodoController :: updateTodo");
-		return ResponseEntity.ok(updatedTodo);
-	}
+//	@PutMapping("{id}")
+//	public ResponseEntity<TodoDto> updateTodo(@RequestBody TodoDto todoDto, @PathVariable("id") Long todoId) {
+//		log.info("Entering into TodoController :: updateTodo");
+//		TodoDto updatedTodo = todoService.updateTodo(todoDto, todoId);
+//		log.info("Exiting into TodoController :: updateTodo");
+//		return ResponseEntity.ok(updatedTodo);
+//	}
 
-	// Build Delete Todo REST API
 	@DeleteMapping("/deleteTodoById/{id}")
 	public ResponseEntity<String> deleteTodoById(@PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: deleteTodoById");
@@ -72,14 +68,12 @@ public class TodoController {
 		return ResponseEntity.ok("Todo deleted successfully!.");
 	}
 
-	// Build Complete Todo REST API
 	@PatchMapping("{id}/complete")
 	public ResponseEntity<TodoDto> completeTodo(@PathVariable("id") Long todoId) {
 		TodoDto updatedTodo = todoService.completeTodo(todoId);
 		return ResponseEntity.ok(updatedTodo);
 	}
 
-	// Build In Complete Todo REST API
 	@PatchMapping("{id}/in-complete")
 	public ResponseEntity<TodoDto> inCompleteTodo(@PathVariable("id") Long todoId) {
 		TodoDto updatedTodo = todoService.inCompleteTodo(todoId);
