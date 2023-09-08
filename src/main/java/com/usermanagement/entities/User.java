@@ -24,4 +24,8 @@ public class User {
     private String lastName;
     @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false, unique = true)
+    private String password;
+    private String gender;
+	private String profession;
 }
