@@ -31,4 +31,5 @@ public class TodoDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date targetDate;
     private Long userId;
+    private Long remainingDaysToComplete;
 }

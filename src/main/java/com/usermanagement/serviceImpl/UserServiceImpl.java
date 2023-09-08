@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
 			if (isValid) {
 				response = saveUser(userDto);
-				response.put(Constant.SUCCESS, 1);
+				
 
 				return response;
 			}
@@ -88,11 +88,19 @@ public class UserServiceImpl implements UserService {
 	private Map<String, Object> saveUser(UserDto userDto) {
 		Map<String, Object> response = new HashMap<>();
 		User user = modelMapper.map(userDto, User.class);
+		
+		if(!userDto.getPassword().equals(user.getConfirmPassword())) {
+			response.put(Constant.FAILED, 0);
+			response.put(Constant.MESSAGE, "Password and Confirm Password are not same");
+		}else {
+		
 		user.setCreatedDate(new Date());
 		User savedUser = userRepository.save(user);
 
 		UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
 		response.put(Constant.DATA, savedUserDto);
+		response.put(Constant.SUCCESS, 1);
+		}
 		return response;
 	}
 

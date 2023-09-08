@@ -40,7 +40,7 @@ public class Todo {
 	@Column(nullable = false)
 	private Date targetDate;
 
-	private Long aging;
+	private Long remainingDaysToComplete;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id")
