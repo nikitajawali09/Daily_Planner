@@ -2,6 +2,8 @@ package com.usermanagement.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,24 +15,31 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 
 @Tag(
         name = "CRUD REST APIs for User Resource",
         description = "CRUD REST APIs - Create User, Update User, Get User, Get All Users, Delete User"
 )
 @RestController
-@AllArgsConstructor
 @RequestMapping("api/users")
 @CrossOrigin("*")
 public class UserController {
+	
+	
+	Logger log = LoggerFactory.getLogger(UserController.class);
 
-    private UserService userService;
+    private final UserService userService;
+    
+    public UserController(UserService userService) {
+		this.userService = userService;
+	}
 
     // build create User REST API
-    @PostMapping
+    @PostMapping("/createNewUser")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user){
-        UserDto savedUser = userService.createUser(user);
+    	log.info("Entering into UserController :: createUser");
+    	UserDto savedUser = userService.createUser(user);
+    	log.info("Exiting into UserController :: createUser");
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

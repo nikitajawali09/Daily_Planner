@@ -14,27 +14,26 @@ import lombok.*;
 )
 public class UserDto {
     private Long id;
-    @Schema(
-            description = "User First Name"
-    )
-    // User first name should not be null or empty
+//    @Schema(
+//            description = "User First Name"
+//    )
     @NotEmpty(message = "User first name should not be null or empty")
     private String firstName;
-
-    @Schema(
-            description = "User Last Name"
-    )
-    // User last name should not be null or empty
     @NotEmpty(message = "User last name should not be null or empty")
     private String lastName;
-
-    @Schema(
-            description = "User Email Address"
-    )
-    // User email should not be null or empty
-    // Email address should be valid
     @NotEmpty(message = "User email should not be null or empty")
     @Email(message = "Email address should be valid")
     private String email;
+    @NotEmpty(message = "User password should not be null or empty")
+    private String password;
+    @NotEmpty(message = "User confirm password should not be null or empty")
+	private String confirmPassword;
+    @NotEmpty(message = "User gender should not be null or empty")
+	private String gender;
+	private String profession;
+    @NotEmpty(message = "User address should not be null or empty")
+	private String address;
+    @NotEmpty(message = "User name should not be null or empty")
+	private String userName;
 }
 

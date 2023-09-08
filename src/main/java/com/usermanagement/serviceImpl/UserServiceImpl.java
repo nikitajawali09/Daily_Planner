@@ -7,11 +7,14 @@ import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
 import com.usermanagement.exception.EmailAlreadyExistsException;
 import com.usermanagement.exception.ResourceNotFoundException;
+import com.usermanagement.exception.UserNameAlreadyExistsException;
 import com.usermanagement.repository.UserRepository;
 import com.usermanagement.service.UserService;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,21 +28,34 @@ public class UserServiceImpl implements UserService {
 	private ModelMapper modelMapper;
 
 	@Override
+	@Transactional
 	public UserDto createUser(UserDto userDto) {
 
-		Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+		try {
+			Optional<User> optionalEmail = userRepository.findByEmail(userDto.getEmail());
 
-		if (optionalUser.isPresent()) {
-			throw new EmailAlreadyExistsException("Email Already Exists for User");
+			if (optionalEmail.isPresent()) {
+				throw new EmailAlreadyExistsException("Email Already Exists for User");
+			}
+
+			Optional<User> optionalUserName = userRepository.findByUserName(userDto.getUserName());
+
+			if (optionalUserName.isPresent()) {
+				throw new UserNameAlreadyExistsException(
+						"User Name Already Exists for User.Try with different username");
+			}
+
+			User user = modelMapper.map(userDto, User.class);
+			user.setCreatedDate(new Date());
+			User savedUser = userRepository.save(user);
+
+			UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+
+			return savedUserDto;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		User user = modelMapper.map(userDto, User.class);
-
-		User savedUser = userRepository.save(user);
-
-		UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
-
-		return savedUserDto;
+		return userDto;
 	}
 
 	@Override
@@ -76,10 +92,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void deleteUser(Long userId) {
-		 User existingUser = userRepository.findById(userId).orElseThrow(
-	                () -> new ResourceNotFoundException("User", "id", userId)
-	        );
+		User existingUser = userRepository.findById(userId)
+				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-	        userRepository.deleteById(userId);
+		userRepository.deleteById(userId);
 	}
 }
