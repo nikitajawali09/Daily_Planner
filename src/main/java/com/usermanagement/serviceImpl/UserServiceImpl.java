@@ -1,8 +1,11 @@
 package com.usermanagement.serviceImpl;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
 import com.usermanagement.exception.EmailAlreadyExistsException;
@@ -15,64 +18,110 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
 
-	private UserRepository userRepository;
+	Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-	private ModelMapper modelMapper;
+	private final UserRepository userRepository;
+
+	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
+		super();
+		this.userRepository = userRepository;
+		this.modelMapper = modelMapper;
+	}
+
+	private final ModelMapper modelMapper;
+
+	boolean isValid = true;
 
 	@Override
 	@Transactional
-	public UserDto createUser(UserDto userDto) {
-
+	public Map<String, Object> createUser(UserDto userDto) {
+		log.info("Entering into UserServiceImpl :: createUser");
+		Map<String, Object> response = new HashMap<>();
 		try {
-			Optional<User> optionalEmail = userRepository.findByEmail(userDto.getEmail());
+			if (userDto.getId() == null) {
+				Optional<User> optionalEmail = userRepository.findByEmail(userDto.getEmail());
 
-			if (optionalEmail.isPresent()) {
-				throw new EmailAlreadyExistsException("Email Already Exists for User");
+				if (optionalEmail.isPresent()) {
+					isValid = false;
+					response.put(Constant.FAILED, 0);
+					response.put(Constant.MESSAGE, "Email-Id already exists :Already Registered ?");
+					// added login.html form
+
+				}
+
+				Optional<User> optionalUserName = userRepository.findByUserName(userDto.getUserName());
+
+				if (optionalUserName.isPresent()) {
+					isValid = false;
+					response.put(Constant.FAILED, 0);
+					response.put(Constant.MESSAGE, "User-Name already exists :Try with different username");
+
+				}
 			}
 
-			Optional<User> optionalUserName = userRepository.findByUserName(userDto.getUserName());
+			if (isValid) {
+				response = saveUser(userDto);
+				response.put(Constant.SUCCESS, 1);
 
-			if (optionalUserName.isPresent()) {
-				throw new UserNameAlreadyExistsException(
-						"User Name Already Exists for User.Try with different username");
+				return response;
 			}
 
-			User user = modelMapper.map(userDto, User.class);
-			user.setCreatedDate(new Date());
-			User savedUser = userRepository.save(user);
-
-			UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
-
-			return savedUserDto;
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.put(Constant.FAILED, 0);
+			response.put(Constant.MESSAGE, "SOMETHING_WENT_WRONG");
 		}
-		return userDto;
+		log.info("Exiting into UserServiceImpl :: createUser");
+		return response;
+	}
+
+	@Transactional
+	private Map<String, Object> saveUser(UserDto userDto) {
+		Map<String, Object> response = new HashMap<>();
+		User user = modelMapper.map(userDto, User.class);
+		user.setCreatedDate(new Date());
+		User savedUser = userRepository.save(user);
+
+		UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+		response.put(Constant.DATA, savedUserDto);
+		return response;
 	}
 
 	@Override
+	@Transactional
 	public UserDto getUserById(Long userId) {
-//		Optional<User> optionalUser = userRepository.findById(userId);
-//		User user = optionalUser.get();
+		User user = null;
+		try {
 
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+			user = userRepository.findById(userId)
+					.orElseThrow(() -> new ResourceNotFoundException("User with ", "id :", userId));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return modelMapper.map(user, UserDto.class);
 
 	}
 
 	@Override
+	@Transactional
 	public List<UserDto> getAllUsers() {
-		List<User> users = userRepository.findAll();
+		List<User> users = null;
+		try {
+			users = userRepository.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return users.stream().map((user) -> modelMapper.map(user, UserDto.class)).collect(Collectors.toList());
 	}
 
@@ -91,10 +140,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteUser(Long userId) {
-		User existingUser = userRepository.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
+		try {
+			userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-		userRepository.deleteById(userId);
+			userRepository.deleteById(userId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

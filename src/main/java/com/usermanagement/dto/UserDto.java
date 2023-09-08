@@ -35,5 +35,6 @@ public class UserDto {
 	private String address;
     @NotEmpty(message = "User name should not be null or empty")
 	private String userName;
+    
 }
 

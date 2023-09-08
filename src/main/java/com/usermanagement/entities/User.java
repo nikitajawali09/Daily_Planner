@@ -22,7 +22,7 @@ import lombok.ToString;
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(nullable = false)
@@ -35,7 +35,7 @@ public class User {
 	@Email(message = "Email address should be valid")
 	private String email;
 	
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String password;
 	
 	@Column(nullable = false)
