@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.usermanagement.dto.TodoDto;
@@ -26,6 +27,7 @@ public class TodoController {
 		this.todoService = todoService;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/addNewTodo")
 	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
 
@@ -35,6 +37,7 @@ public class TodoController {
 		return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/getTodoById/{id}")
 	public ResponseEntity<TodoDto> getTodoById(@Valid @PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: getTodoById");
@@ -43,6 +46,7 @@ public class TodoController {
 		return new ResponseEntity<>(todoDto, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/getAllTodos")
 	public ResponseEntity<List<TodoDto>> getAllTodos() {
 		log.info("Entering into TodoController :: getAllTodos");
@@ -60,6 +64,7 @@ public class TodoController {
 //		return ResponseEntity.ok(updatedTodo);
 //	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/deleteTodoById/{id}")
 	public ResponseEntity<String> deleteTodoById(@PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: deleteTodoById");
@@ -68,12 +73,14 @@ public class TodoController {
 		return ResponseEntity.ok("Todo deleted successfully!.");
 	}
 
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PatchMapping("{id}/complete")
 	public ResponseEntity<TodoDto> completeTodo(@PathVariable("id") Long todoId) {
 		TodoDto updatedTodo = todoService.completeTodo(todoId);
 		return ResponseEntity.ok(updatedTodo);
 	}
 
+	   @PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PatchMapping("{id}/in-complete")
 	public ResponseEntity<TodoDto> inCompleteTodo(@PathVariable("id") Long todoId) {
 		TodoDto updatedTodo = todoService.inCompleteTodo(todoId);
