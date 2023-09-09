@@ -10,15 +10,21 @@
 <body>
 <div align="center">
     <h1>Registeration Completed</h1>
-<!--     	<form th:action="@{/saveToDB}" method="post" role="form"  -->
-<!-- 				th:object="${userForm}"> -->
+
     <div>
-        <p>Name: <strong th:text="${userForm.firstName}"></strong></p>
-          <p>Name: <strong th:text="${userForm.lastName}"></strong></p>
-        <p>Email: <strong th:text="${userForm.email}"></strong></p>
-        <p>Password: <strong th:text="${userForm.password}"></strong></p>
-        <p>Gender: <strong th:text="${userForm.gender}"></strong></p>
-        <p>Profession: <strong th:text="${userForm.profession}"></strong></p>
+    <table>
+    <tr th:each="entry : ${userForm}">
+    <td th:text="${entry.key}"/>
+    <td th:text="${entry.value}"/>
+    
+<!--         <p>Name: <strong th:text="${response.firstName}"></strong></p> -->
+<!--          <p>Name: <strong th:text="${response.lastName}"></strong></p> -->
+<!--         <p>Email: <strong th:text="${response.email}"></strong></p> -->
+<!--         <p>Password: <strong th:text="${response.password}"></strong></p> -->
+<!--         <p>Gender: <strong th:text="${response.gender}"></strong></p> -->
+<!--         <p>Profession: <strong th:text="${response.profession}"></strong></p> -->
+        </tr>
+        </table>
     </div>
  
 <!--     </form> -->

@@ -14,6 +14,7 @@ import lombok.*;
 @Schema(
         description = "UserDto Model Information"
 )
+@ToString
 public class UserDto {
     private Long id;
 //    @Schema(

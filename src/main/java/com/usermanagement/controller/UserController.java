@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.usermanagement.dto.UserDto;
@@ -33,12 +34,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/createNewUser")
-	public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserDto user) {
+	public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserDto user,Model model) {
 
 		Map<String, Object> response = new HashMap<>();
 		log.info("Entering into UserController :: createUser");
 		
-		response = userService.createUser(user);
+		response = userService.createUser(user,model);
 		
 		log.info("Exiting into UserController :: createUser");
 		return ResponseEntity.accepted().body(response);

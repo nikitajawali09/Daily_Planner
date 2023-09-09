@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public Map<String, Object> createUser(UserDto userDto) {
+	public Map<String, Object> createUser(UserDto userDto,Model model) {
 		log.info("Entering into UserServiceImpl :: createUser");
 		Map<String, Object> response = new HashMap<>();
 		try {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 			if (isValid) {
-				response = saveUser(userDto);
+				response = saveUser(userDto,model);
 				
 
 				return response;
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	private Map<String, Object> saveUser(UserDto userDto) {
+	private Map<String, Object> saveUser(UserDto userDto,Model model) {
 		Map<String, Object> response = new HashMap<>();
 		User user = modelMapper.map(userDto, User.class);
 		
@@ -100,8 +101,20 @@ public class UserServiceImpl implements UserService {
 		UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
 		response.put(Constant.DATA, savedUserDto);
 		response.put(Constant.SUCCESS, 1);
+		
+		model.addAttribute("userForm", response);
+		
+		getSuccess(model);
+		
+		
 		}
 		return response;
+	}
+
+	private  String getSuccess(Model model) {
+		return "register-success";
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
