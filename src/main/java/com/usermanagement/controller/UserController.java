@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping("/createNewUser")
 	public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserDto user,Model model) {
 
@@ -58,7 +60,7 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@Operation(summary = "Get All Users REST API", description = "Get All Users REST API is used to get a all the users from the database")
 	@ApiResponse(responseCode = "200", description = "HTTP Status 200 SUCCESS")
 	@GetMapping("/getAllUsers")

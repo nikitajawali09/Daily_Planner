@@ -10,9 +10,9 @@ import com.usermanagement.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
-	User findByFirstName(String firstName);
+	User findByName(String name);
 
 	@Query("select p from User p where p.userName=:userName")
 	Optional<User> findByUserName(@Param("userName") String userName);

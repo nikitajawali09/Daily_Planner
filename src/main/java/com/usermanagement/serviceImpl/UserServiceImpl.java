@@ -3,21 +3,26 @@ package com.usermanagement.serviceImpl;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
+import com.usermanagement.entities.Role;
 import com.usermanagement.entities.User;
 import com.usermanagement.exception.EmailAlreadyExistsException;
 import com.usermanagement.exception.ResourceNotFoundException;
 import com.usermanagement.exception.UserNameAlreadyExistsException;
+import com.usermanagement.repository.RoleRepository;
 import com.usermanagement.repository.UserRepository;
 import com.usermanagement.service.UserService;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,11 +37,17 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 
-	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper) {
-		super();
+	private final RoleRepository roleRepository;
+	private final PasswordEncoder passwordEncoder;
+
+	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+			PasswordEncoder passwordEncoder,ModelMapper modelMapper) {
 		this.userRepository = userRepository;
-		this.modelMapper = modelMapper;
+		this.roleRepository = roleRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.modelMapper=modelMapper;
 	}
+
 
 	private final ModelMapper modelMapper;
 
@@ -44,14 +55,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public Map<String, Object> createUser(UserDto userDto,Model model) {
+	public Map<String, Object> createUser(UserDto userDto, Model model) {
 		log.info("Entering into UserServiceImpl :: createUser");
 		Map<String, Object> response = new HashMap<>();
 		try {
 			if (userDto.getId() == null) {
-				Optional<User> optionalEmail = userRepository.findByEmail(userDto.getEmail());
+				User optionalEmail = userRepository.findByEmail(userDto.getEmail());
 
-				if (optionalEmail.isPresent()) {
+				if (optionalEmail!=null) {
 					isValid = false;
 					response.put(Constant.FAILED, 0);
 					response.put(Constant.MESSAGE, "Email-Id already exists :Already Registered ?");
@@ -70,8 +81,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 			if (isValid) {
-				response = saveUser(userDto,model);
-				
+				response = saveUser(userDto, model);
 
 				return response;
 			}
@@ -86,35 +96,34 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Transactional
-	private Map<String, Object> saveUser(UserDto userDto,Model model) {
+	private Map<String, Object> saveUser(UserDto userDto, Model model) {
 		Map<String, Object> response = new HashMap<>();
 		User user = modelMapper.map(userDto, User.class);
-		
-		if(!userDto.getPassword().equals(user.getConfirmPassword())) {
+
+		if (!userDto.getPassword().equals(user.getConfirmPassword())) {
 			response.put(Constant.FAILED, 0);
 			response.put(Constant.MESSAGE, "Password and Confirm Password are not same");
-		}else {
-		
-		user.setCreatedDate(new Date());
-		User savedUser = userRepository.save(user);
+		} else {
 
-		UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
-		response.put(Constant.DATA, savedUserDto);
-		response.put(Constant.SUCCESS, 1);
-		
-		model.addAttribute("userForm", response);
-		
-		getSuccess(model);
-		
-		
+			// user.setCreatedDate(new Date());
+			User savedUser = userRepository.save(user);
+
+			UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+			response.put(Constant.DATA, savedUserDto);
+			response.put(Constant.SUCCESS, 1);
+
+			model.addAttribute("userForm", response);
+
+			getSuccess(model);
+
 		}
 		return response;
 	}
 
-	private  String getSuccess(Model model) {
+	private String getSuccess(Model model) {
 		return "register-success";
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -152,8 +161,8 @@ public class UserServiceImpl implements UserService {
 		User existingUser = userRepository.findById(user.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", user.getId()));
 
-		existingUser.setFirstName(user.getFirstName());
-		existingUser.setLastName(user.getLastName());
+		existingUser.setName(user.getFirstName() + " "+user.getLastName());
+		//existingUser.setLastName(user.getLastName());
 		existingUser.setEmail(user.getEmail());
 		User updatedUser = userRepository.save(existingUser);
 
@@ -170,5 +179,58 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void saveUser(UserDto userDto) {
+		try {
+			log.info("Entering into UserServiceImpl :: saveUser");
+			User user = new User();
+			user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+			user.setEmail(userDto.getEmail());
+			// encrypt the password using spring security
+			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+			user.setConfirmPassword(passwordEncoder.encode(userDto.getConfirmPassword()));
+			user.setGender(userDto.getGender());
+			user.setAddress(userDto.getAddress());
+			user.setUserName(userDto.getUserName());
+			user.setCreatedDate(new Date());
+			Role role = roleRepository.findByName("ROLE_ADMIN");
+			if (role == null) {
+				role = checkRoleExist();
+			}
+			user.setRoles(Arrays.asList(role));
+			log.info("Exiting into UserServiceImpl :: saveUser");
+			userRepository.save(user);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public List<UserDto> findAllUsers() {
+		List<User> users = userRepository.findAll();
+		return users.stream().map((user) -> mapToUserDto(user)).collect(Collectors.toList());
+	}
+
+	private UserDto mapToUserDto(User user) {
+		UserDto userDto = new UserDto();
+		String[] str = user.getName().split(" ");
+		userDto.setFirstName(str[0]);
+		userDto.setLastName(str[1]);
+		userDto.setEmail(user.getEmail());
+		return userDto;
+	}
+
+	private Role checkRoleExist() {
+		Role role = new Role();
+		role.setName("ROLE_ADMIN");
+		return roleRepository.save(role);
 	}
 }

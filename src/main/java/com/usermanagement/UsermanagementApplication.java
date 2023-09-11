@@ -2,6 +2,8 @@ package com.usermanagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -34,6 +36,12 @@ public class UsermanagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UsermanagementApplication.class, args);
+		
+		 PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	        System.out.println(passwordEncoder.encode("ramesh"));
+
+	        System.out.println(passwordEncoder.encode("admin"));
 	}
 
 }
