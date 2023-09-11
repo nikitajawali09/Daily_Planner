@@ -59,12 +59,30 @@ public class AuthController {
 	                               Model model){
 	        try {
 	        	log.info("Entering into AuthController :: registration");
-				User existingUser = userService.findUserByEmail(userDto.getEmail());
+				User existingEmail = userService.findUserByEmail(userDto.getEmail());
 
-				if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
+				if(existingEmail != null && existingEmail.getEmail() != null && !existingEmail.getEmail().isEmpty()){
 				    result.rejectValue("email", null,
 				            "There is already an account registered with the same email");
 				}
+				
+				User existingUser = userService.findUserByuserName(userDto.getUserName());
+
+				if(existingUser != null && existingUser.getUserName() != null && !existingUser.getUserName().isEmpty()){
+				    result.rejectValue("userName", null,
+				            "There is already an account registered with the same username. kindly try with different username");
+				}
+				
+				
+				if(userDto.getConfirmPassword() != null && userDto.getPassword() != null 
+						){
+					if(!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+				    result.rejectValue("password", null,
+				            "Password and Confirm Password should be same");
+					}
+				}
+				
+				
 				log.info("Entering into AuthController :: hasErrors");
 				if(result.hasErrors()){
 				    model.addAttribute("user", userDto);

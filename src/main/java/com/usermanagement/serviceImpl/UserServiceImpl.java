@@ -233,4 +233,9 @@ public class UserServiceImpl implements UserService {
 		role.setName("ROLE_ADMIN");
 		return roleRepository.save(role);
 	}
+
+	@Override
+	public User findUserByuserName(String userName) {
+		return userRepository.findByuserName(userName);
+	}
 }
