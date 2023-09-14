@@ -1,5 +1,6 @@
 package com.usermanagement.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -99,6 +100,15 @@ public class AuthController {
 				e.printStackTrace();
 			}
 			return null;
+	    }
+	    
+	 // handler method to handle list of users
+	    @GetMapping("/users")
+	    public String users(Model model){
+	        List<UserDto> users = userService.findAllUsers();
+	        System.out.println(users);
+	        model.addAttribute("users", users);
+	        return "users";
 	    }
 
 }

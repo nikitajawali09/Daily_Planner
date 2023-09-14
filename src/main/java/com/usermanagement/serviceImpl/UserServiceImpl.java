@@ -161,7 +161,8 @@ public class UserServiceImpl implements UserService {
 		User existingUser = userRepository.findById(user.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", user.getId()));
 
-		existingUser.setName(user.getFirstName() + " "+user.getLastName());
+		existingUser.setName(user.getFirstName()+" "+user.getLastName());
+		//existingUser.setLastName(user.getLastName());
 		//existingUser.setLastName(user.getLastName());
 		existingUser.setEmail(user.getEmail());
 		User updatedUser = userRepository.save(existingUser);
@@ -186,7 +187,8 @@ public class UserServiceImpl implements UserService {
 		try {
 			log.info("Entering into UserServiceImpl :: saveUser");
 			User user = new User();
-			user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+			user.setName(userDto.getFirstName() + " "+userDto.getLastName());
+		//	user.setLastName(userDto.getLastName());
 			user.setEmail(userDto.getEmail());
 			// encrypt the password using spring security
 			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
@@ -220,11 +222,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private UserDto mapToUserDto(User user) {
-		UserDto userDto = new UserDto();
-		String[] str = user.getName().split(" ");
-		userDto.setFirstName(str[0]);
-		userDto.setLastName(str[1]);
-		userDto.setEmail(user.getEmail());
+		UserDto userDto = null;
+		try {
+			userDto = new UserDto();
+			userDto.setFirstName(user.getName());
+			//userDto.setLastName(str[1]);
+			userDto.setEmail(user.getEmail());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return userDto;
 	}
 
