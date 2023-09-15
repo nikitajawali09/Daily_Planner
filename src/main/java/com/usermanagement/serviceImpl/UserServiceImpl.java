@@ -197,7 +197,7 @@ public class UserServiceImpl implements UserService {
 			user.setAddress(userDto.getAddress());
 			user.setUserName(userDto.getUserName());
 			user.setCreatedDate(new Date());
-			Role role = roleRepository.findByName("ROLE_ADMIN");
+			Role role = roleRepository.findByName("ROLE_USER");
 			if (role == null) {
 				role = checkRoleExist();
 			}
@@ -226,7 +226,6 @@ public class UserServiceImpl implements UserService {
 		try {
 			userDto = new UserDto();
 			userDto.setFirstName(user.getName());
-			//userDto.setLastName(str[1]);
 			userDto.setEmail(user.getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -236,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
 	private Role checkRoleExist() {
 		Role role = new Role();
-		role.setName("ROLE_ADMIN");
+		role.setName("ROLE_USER");
 		return roleRepository.save(role);
 	}
 

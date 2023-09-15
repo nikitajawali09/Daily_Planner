@@ -10,6 +10,17 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
 </head>
+
+<style>
+#firstname {
+  background-color: #f5f5dc;
+}
+
+body {
+  background-image: linear-gradient(pink, hsl(300, 76%, 72%), pink);
+  }
+</style>
+
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
@@ -22,6 +33,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a>
                 </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -30,6 +44,15 @@
 <div class="container">
     <div class="row">
         <h1 class="text-center"> Registration and Login System </h1>
+    </div>
+    <br>
+    <br>
+     <div class="row" >
+        <h1 class="text-center" id="firstname" ><i> Welcome to online planner for keeping track of your daily schedule </i> </h1>
+    </div>
+     <br>
+    <div class="row">
+        <h1 class="text-center"> We are here to save your daily todo list </h1>
     </div>
 </div>
 </body>

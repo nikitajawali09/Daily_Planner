@@ -27,7 +27,7 @@ public class TodoController {
 		this.todoService = todoService;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping("/addNewTodo")
 	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
 

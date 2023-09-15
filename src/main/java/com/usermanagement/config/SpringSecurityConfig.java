@@ -41,13 +41,13 @@ public class SpringSecurityConfig {
 	                .requestMatchers("/register/**").permitAll()
 	                .requestMatchers("/index").permitAll()
 	                .requestMatchers("/users").hasRole("ADMIN")
-	                //.requestMatchers("/users").hasRole("USER")
+	                .requestMatchers("/todos/getAllTodos").hasRole("USER")
 	                .and()
 	                .formLogin(
 	                        form -> form
 	                                .loginPage("/login")
 	                                .loginProcessingUrl("/login")
-	                                .defaultSuccessUrl("/users")
+	                                .defaultSuccessUrl("/todos/getAllTodos")
 	                                .permitAll()
 	                ).logout(
 	                        logout -> logout
