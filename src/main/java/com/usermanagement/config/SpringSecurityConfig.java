@@ -40,15 +40,17 @@ public class SpringSecurityConfig {
 	                .authorizeHttpRequests()
 	                .requestMatchers("/register/**").permitAll()
 	                .requestMatchers("/index").permitAll()
-	                .requestMatchers("/users").hasRole("ADMIN")
-	                .requestMatchers("/todos/getAllTodos").hasRole("USER")
+	                .requestMatchers("/users").hasRole("USER")
+	                .requestMatchers("/todos/**").hasRole("USER")
+	                //.requestMatchers("/users").hasRole("USER")
 	                .and()
 	                .formLogin(
 	                        form -> form
 	                                .loginPage("/login")
 	                                .loginProcessingUrl("/login")
-	                                .defaultSuccessUrl("/todos/getAllTodos")
+	                                .defaultSuccessUrl("/users")
 	                                .permitAll()
+	          
 	                ).logout(
 	                        logout -> logout
 	                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

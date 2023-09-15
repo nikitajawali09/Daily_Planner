@@ -66,12 +66,12 @@ public class AuthController {
 				            "There is already an account registered with the same email");
 				}
 				
-				User existingUser = userService.findUserByuserName(userDto.getUserName());
+				//User existingUser = userService.findUserByuserName(userDto.getUserName());
 
-				if(existingUser != null && existingUser.getUserName() != null && !existingUser.getUserName().isEmpty()){
-				    result.rejectValue("userName", null,
-				            "There is already an account registered with the same username. kindly try with different username");
-				}
+//				if(existingUser != null && existingUser.getUserName() != null && !existingUser.getUserName().isEmpty()){
+//				    result.rejectValue("userName", null,
+//				            "There is already an account registered with the same username. kindly try with different username");
+//				}
 				
 				
 				if(userDto.getConfirmPassword() != null && userDto.getPassword() != null 

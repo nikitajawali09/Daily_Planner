@@ -7,14 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.usermanagement.dto.TodoDto;
+import com.usermanagement.dto.UserDto;
 import com.usermanagement.service.TodoService;
 
 import jakarta.validation.Valid;
 
-@RestController
+@Controller
 @RequestMapping("/todos")
 @CrossOrigin("*")
 public class TodoController {
@@ -26,6 +29,18 @@ public class TodoController {
 	public TodoController(TodoService todoService) {
 		this.todoService = todoService;
 	}
+	
+	// handler method to handle user registration form request
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/createTodo")
+    public String createTodo(Model model){
+    	log.info("Entering into AuthController :: createTodo");
+        // create model object to store form data
+        TodoDto user = new TodoDto();
+        model.addAttribute("user", user);
+        log.info("Exiting into AuthController :: createTodo");
+        return "createTodo";
+    }
 
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping("/addNewTodo")
