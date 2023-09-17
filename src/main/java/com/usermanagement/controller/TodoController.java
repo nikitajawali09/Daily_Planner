@@ -9,10 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
+import com.usermanagement.entities.User;
 import com.usermanagement.service.TodoService;
 
 import jakarta.validation.Valid;
@@ -41,16 +43,47 @@ public class TodoController {
         log.info("Exiting into AuthController :: createTodo");
         return "createTodo";
     }
-
+	
+	   // handler method to handle user registration form submit request
+	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
-	@PostMapping("/addNewTodo")
-	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
+    @PostMapping("/save")
+    public String todo(@Valid @ModelAttribute("user") TodoDto todoDto,
+                               BindingResult result,
+                               Model model){
+        try {
+        	log.info("Entering into AuthController :: registration");
+			
 
-		log.info("Entering into TodoController :: addNewTodo");
-		TodoDto savedTodo = todoService.addTodo(todoDto);
-		log.info("Exiting into TodoController :: addNewTodo");
-		return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
-	}
+			log.info("Entering into AuthController :: hasErrors");
+			if(result.hasErrors()){
+			    model.addAttribute("user", todoDto);
+			    return "/createTodo";
+			}
+			
+			
+			log.info("Exiting into AuthController :: hasErrors");
+			log.info("Entering into AuthController :: saveUser");
+			todoService.addTodo(todoDto);
+			log.info("Exiting into AuthController :: saveUser");
+			  log.info("Exiting into AuthController :: registration");
+			return "redirect:/register?success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+//
+//	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+//	@PostMapping("/addNewTodo")
+//	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
+//
+//		log.info("Entering into TodoController :: addNewTodo");
+//		TodoDto savedTodo = todoService.addTodo(todoDto);
+//		log.info("Exiting into TodoController :: addNewTodo");
+//		return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
+//	}
 
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/getTodoById/{id}")

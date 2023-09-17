@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
 import com.usermanagement.service.UserService;
@@ -105,7 +106,8 @@ public class AuthController {
 	    @GetMapping("/users")
 	    public String users(Model model){
 	        List<UserDto> users = userService.findAllUsers();
-	        System.out.println(users);
+	        
+	        
 	        model.addAttribute("users", users);
 	        return "users";
 	    }

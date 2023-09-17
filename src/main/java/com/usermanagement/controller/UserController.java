@@ -34,6 +34,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	//@PreAuthorize("hasRole('USER')")
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping("/createNewUser")
 	public ResponseEntity<Map<String, Object>> createUser(@Valid @RequestBody UserDto user,Model model) {

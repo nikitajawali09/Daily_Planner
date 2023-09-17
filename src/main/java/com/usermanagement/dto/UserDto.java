@@ -1,5 +1,7 @@
 package com.usermanagement.dto;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -41,6 +43,11 @@ public class UserDto {
     @NotEmpty(message = "User name should not be null or empty")
     @Size(min = 6, max = 20, message = "User name must be between 10 and 20 characters")
 	private String userName;
+    
+    private String title;
+    private List<String> description;
+    
+    
     
 }
 

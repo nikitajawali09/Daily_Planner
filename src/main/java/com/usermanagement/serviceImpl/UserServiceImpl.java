@@ -10,11 +10,13 @@ import org.springframework.ui.Model;
 import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.Role;
+import com.usermanagement.entities.Todo;
 import com.usermanagement.entities.User;
 import com.usermanagement.exception.EmailAlreadyExistsException;
 import com.usermanagement.exception.ResourceNotFoundException;
 import com.usermanagement.exception.UserNameAlreadyExistsException;
 import com.usermanagement.repository.RoleRepository;
+import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.repository.UserRepository;
 import com.usermanagement.service.UserService;
 
@@ -39,13 +41,16 @@ public class UserServiceImpl implements UserService {
 
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
+	
+	private final TodoRepository todoRepository;
 
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder,ModelMapper modelMapper) {
+			PasswordEncoder passwordEncoder,ModelMapper modelMapper,TodoRepository todoRepository) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.modelMapper=modelMapper;
+		this.todoRepository=todoRepository;
 	}
 
 
@@ -225,8 +230,16 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = null;
 		try {
 			userDto = new UserDto();
+			userDto.setId(user.getId());
 			userDto.setFirstName(user.getName());
 			userDto.setEmail(user.getEmail());
+			
+//			List<Todo> todoList = todoRepository.findUserId(userDto.getId());
+//			
+//			for (Todo todo : todoList) {
+//				userDto.setTitle(todo.getTitle());
+//			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
