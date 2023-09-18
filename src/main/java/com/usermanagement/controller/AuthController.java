@@ -123,7 +123,7 @@ public class AuthController {
 	                              Model model){
 	    	
 	        UserDto user = userService.getStudentById(id);
-	       // System.out.println("Updated student list:"+user);
+	      
 	        model.addAttribute("user", user);
 	        return "edit-user";
 	    }
@@ -138,11 +138,12 @@ public class AuthController {
 	                                Model model){
 	        if(result.hasErrors()){
 	        	 model.addAttribute("user", userDto);
-	            return "edit_student";
+	            return "edit-user";
 	        }
+	        
 	        userDto.setId(id);
 	        userService.updateUser(userDto);
-	        return "redirect:/students";
+	        return "redirect:/users";
 	    }
 	    
 	    

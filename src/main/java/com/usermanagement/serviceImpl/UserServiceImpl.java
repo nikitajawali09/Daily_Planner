@@ -166,10 +166,14 @@ public class UserServiceImpl implements UserService {
 		User existingUser = userRepository.findById(user.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", user.getId()));
 
-		existingUser.setName(user.getFirstName()+" "+user.getLastName());
+		existingUser.setName(user.getFirstName());
 		//existingUser.setLastName(user.getLastName());
 		//existingUser.setLastName(user.getLastName());
 		existingUser.setEmail(user.getEmail());
+		existingUser.setAddress(user.getAddress());
+		existingUser.setUserName(user.getUserName());
+		
+		System.out.println("existinguser:"+existingUser);
 		User updatedUser = userRepository.save(existingUser);
 
 		return modelMapper.map(updatedUser, UserDto.class);
@@ -192,7 +196,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			log.info("Entering into UserServiceImpl :: saveUser");
 			User user = new User();
-			user.setName(userDto.getFirstName() + " "+userDto.getLastName());
+			user.setName(userDto.getFirstName());
 		//	user.setLastName(userDto.getLastName());
 			user.setEmail(userDto.getEmail());
 			// encrypt the password using spring security
@@ -262,7 +266,14 @@ public class UserServiceImpl implements UserService {
 		User userDto = userRepository.findById(id).get();
 		System.out.println("Find by id:"+userDto);
 		UserDto savedUserDto = new UserDto();
-		//savedUserDto.setN(userDto.getName());
+		savedUserDto.setId(userDto.getId());
+		savedUserDto.setFirstName(userDto.getName());
+		savedUserDto.setEmail(userDto.getEmail());
+		savedUserDto.setAddress(userDto.getAddress());
+		savedUserDto.setGender(userDto.getGender());
+		savedUserDto.setPassword(userDto.getPassword());
+		savedUserDto.setConfirmPassword(userDto.getConfirmPassword());
+		savedUserDto.setUserName(userDto.getUserName());
 		System.out.println("After mapping:"+savedUserDto);
 		return savedUserDto;
 	}
