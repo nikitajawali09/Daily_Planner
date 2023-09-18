@@ -256,4 +256,14 @@ public class UserServiceImpl implements UserService {
 	public User findUserByuserName(String userName) {
 		return userRepository.findByuserName(userName);
 	}
+
+	@Override
+	public UserDto getStudentById(Long id) {
+		User userDto = userRepository.findById(id).get();
+		System.out.println("Find by id:"+userDto);
+		UserDto savedUserDto = new UserDto();
+		//savedUserDto.setN(userDto.getName());
+		System.out.println("After mapping:"+savedUserDto);
+		return savedUserDto;
+	}
 }

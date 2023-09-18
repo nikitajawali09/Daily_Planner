@@ -42,7 +42,8 @@ public class SpringSecurityConfig {
 	                .requestMatchers("/index").permitAll()
 	                .requestMatchers("/users").hasRole("USER")
 	                .requestMatchers("/todos/**").hasRole("USER")
-	                //.requestMatchers("/users").hasRole("USER")
+	                .requestMatchers("/todos/**").hasRole("USER")
+	                .requestMatchers("/users/**").hasRole("USER")
 	                .and()
 	                .formLogin(
 	                        form -> form

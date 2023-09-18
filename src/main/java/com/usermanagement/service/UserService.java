@@ -28,4 +28,6 @@ public interface UserService {
 	List<UserDto> findAllUsers();
 
 	User findUserByuserName(String userName);
+
+	UserDto getStudentById(Long id);
 }

@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.usermanagement.dto.TodoDto;
@@ -19,6 +22,7 @@ import com.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 
 @Controller
+@CrossOrigin("*")
 public class AuthController {
 	
 	Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -105,11 +109,45 @@ public class AuthController {
 	 // handler method to handle list of users
 	    @GetMapping("/users")
 	    public String users(Model model){
-	        List<UserDto> users = userService.findAllUsers();
-	        
-	        
+	    	
+	        List<UserDto> users = userService.findAllUsers();	        
 	        model.addAttribute("users", users);
 	        return "users";
+	        
 	    }
 
+	    // handler method to handle edit student request
+	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+	    @GetMapping("/users/{id}/edit")
+	    public String editStudent(@PathVariable("id") Long id,
+	                              Model model){
+	    	
+	        UserDto user = userService.getStudentById(id);
+	       // System.out.println("Updated student list:"+user);
+	        model.addAttribute("user", user);
+	        return "edit-user";
+	    }
+	 
+
+	 // handler method to handle edit student form submit request
+	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+	    @PostMapping("/users/{id}")
+	    public String updateStudent(@PathVariable("id") Long id,
+	                                @Valid @ModelAttribute("user") UserDto userDto,
+	                                BindingResult result,
+	                                Model model){
+	        if(result.hasErrors()){
+	        	 model.addAttribute("user", userDto);
+	            return "edit_student";
+	        }
+	        userDto.setId(id);
+	        userService.updateUser(userDto);
+	        return "redirect:/students";
+	    }
+	    
+	    
+	    
+	    
+	    
 }
+
