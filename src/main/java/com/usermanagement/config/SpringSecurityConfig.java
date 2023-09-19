@@ -41,10 +41,40 @@ public class SpringSecurityConfig {
 	                .requestMatchers("/register/**").permitAll()
 	                .requestMatchers("/index").permitAll()
 	                .requestMatchers("/login").hasAnyRole("USER","ADMIN")
-	                .requestMatchers("/users").hasRole("USER")
+	                .requestMatchers("/users").hasAnyRole("USER","ADMIN")
 	                .requestMatchers("/todos/**").hasRole("USER")
 	                .requestMatchers("/todos/**").hasRole("USER")
-	                .requestMatchers("/users/**").hasRole("USER")
+	                .requestMatchers("/users/**").hasRole("USER");
+	        
+	        
+	        if(http.csrf().disable()
+	                .authorizeHttpRequests().requestMatchers("/login").hasRole("USER") != null) {
+	        	
+	        	 http.csrf().disable()
+	                .authorizeHttpRequests().requestMatchers("/login").hasRole("USER")
+	                .and()
+	                .formLogin(
+	                        form -> form
+	                                .loginPage("/login")
+	                                .loginProcessingUrl("/login")
+	                                .defaultSuccessUrl("/todos/createTodo")
+	                                .permitAll()
+	          
+	                ).logout(
+	                        logout -> logout
+	                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+	                                .permitAll()
+
+	                );
+	        	
+	        
+	        }
+	        
+	        if(http.csrf().disable()
+	                .authorizeHttpRequests().requestMatchers("/login").hasRole("ADMIN") != null) {
+	        	
+	        	 http.csrf().disable()
+	                .authorizeHttpRequests().requestMatchers("/login").hasRole("ADMIN")
 	                .and()
 	                .formLogin(
 	                        form -> form
@@ -59,6 +89,26 @@ public class SpringSecurityConfig {
 	                                .permitAll()
 
 	                );
+	        	
+	        
+	        }
+	        
+	      
+	        
+	                //.and()
+//	                .formLogin(
+//	                        form -> form
+//	                                .loginPage("/login")
+//	                                .loginProcessingUrl("/login")
+//	                                .defaultSuccessUrl("/users")
+//	                                .permitAll()
+//	          
+//	                ).logout(
+//	                        logout -> logout
+//	                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//	                                .permitAll()
+//
+//	                );
 	        return http.build();
 	    }
 	
