@@ -67,7 +67,7 @@ public class TodoController {
 			todoService.addTodo(todoDto);
 			log.info("Exiting into AuthController :: saveUser");
 			  log.info("Exiting into AuthController :: registration");
-			return "redirect:/register?success";
+			return "redirect:/todos/createTodo?success";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
