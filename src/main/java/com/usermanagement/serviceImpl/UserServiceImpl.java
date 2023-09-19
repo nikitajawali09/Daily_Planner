@@ -3,9 +3,11 @@ package com.usermanagement.serviceImpl;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
@@ -18,6 +20,7 @@ import com.usermanagement.exception.UserNameAlreadyExistsException;
 import com.usermanagement.repository.RoleRepository;
 import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.repository.UserRepository;
+import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.UserService;
 
 import jakarta.transaction.Transactional;
@@ -42,15 +45,16 @@ public class UserServiceImpl implements UserService {
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
 	
-	private final TodoRepository todoRepository;
+	private final UserRolesRepository userRolesRepository;
+
 
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder,ModelMapper modelMapper,TodoRepository todoRepository) {
+			PasswordEncoder passwordEncoder,ModelMapper modelMapper,UserRolesRepository userRolesRepository) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.modelMapper=modelMapper;
-		this.todoRepository=todoRepository;
+		this.userRolesRepository=userRolesRepository;
 	}
 
 
@@ -180,13 +184,28 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Transactional
 	public void deleteUser(Long userId) {
 		try {
 			userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-			userRepository.deleteById(userId);
+			System.out.println("roles:"+userId);
+			//userRolesRepository.deleteById(userId);
+			userDelete(userId);
+			
+			
+			
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Transactional
+	@Modifying
+	private void userDelete(Long userId) {
+		try {
+		System.out.println("after roles:"+userId);
+		userRepository.deleteById(userId);
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

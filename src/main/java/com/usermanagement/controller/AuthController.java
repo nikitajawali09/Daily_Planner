@@ -147,6 +147,12 @@ public class AuthController {
 	    }
 	    
 	    
+	    // Handler method to handle delete student request
+	    @GetMapping("/users/{id}/delete")
+	    public String deleteStudent(@PathVariable("id") Long userId){
+	    	userService.deleteUser(userId);
+	        return "redirect:/users";
+	    }
 	    
 	    
 	    
