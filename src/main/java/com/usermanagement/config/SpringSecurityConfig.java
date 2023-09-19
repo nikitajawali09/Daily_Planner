@@ -40,6 +40,7 @@ public class SpringSecurityConfig {
 	                .authorizeHttpRequests()
 	                .requestMatchers("/register/**").permitAll()
 	                .requestMatchers("/index").permitAll()
+	                .requestMatchers("/login").hasAnyRole("USER","ADMIN")
 	                .requestMatchers("/users").hasRole("USER")
 	                .requestMatchers("/todos/**").hasRole("USER")
 	                .requestMatchers("/todos/**").hasRole("USER")
