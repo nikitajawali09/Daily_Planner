@@ -42,7 +42,7 @@ public class AuthController {
 
 	    // handler method to handle login request
 	    @GetMapping("/login")
-	    public String login(){
+	    public String login(Model model){
 	        return "login";
 	    }
 

@@ -78,15 +78,6 @@ public class UserServiceImpl implements UserService {
 					// added login.html form
 
 				}
-
-				Optional<User> optionalUserName = userRepository.findByUserName(userDto.getUserName());
-
-				if (optionalUserName.isPresent()) {
-					isValid = false;
-					response.put(Constant.FAILED, 0);
-					response.put(Constant.MESSAGE, "User-Name already exists :Try with different username");
-
-				}
 			}
 
 			if (isValid) {
@@ -114,7 +105,7 @@ public class UserServiceImpl implements UserService {
 			response.put(Constant.MESSAGE, "Password and Confirm Password are not same");
 		} else {
 
-			// user.setCreatedDate(new Date());
+			user.setCreatedDate(new Date());
 			User savedUser = userRepository.save(user);
 
 			UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
@@ -175,7 +166,7 @@ public class UserServiceImpl implements UserService {
 		//existingUser.setLastName(user.getLastName());
 		existingUser.setEmail(user.getEmail());
 		existingUser.setAddress(user.getAddress());
-		existingUser.setUserName(user.getUserName());
+		//existingUser.setUserName(user.getUserName());
 		
 		System.out.println("existinguser:"+existingUser);
 		User updatedUser = userRepository.save(existingUser);
@@ -216,14 +207,14 @@ public class UserServiceImpl implements UserService {
 			log.info("Entering into UserServiceImpl :: saveUser");
 			User user = new User();
 			user.setName(userDto.getFirstName());
-		//	user.setLastName(userDto.getLastName());
+		
 			user.setEmail(userDto.getEmail());
 			// encrypt the password using spring security
 			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 			user.setConfirmPassword(passwordEncoder.encode(userDto.getConfirmPassword()));
 			user.setGender(userDto.getGender());
 			user.setAddress(userDto.getAddress());
-			user.setUserName(userDto.getUserName());
+		
 			user.setCreatedDate(new Date());
 			Role role = roleRepository.findByName("ROLE_USER");
 			if (role == null) {
@@ -277,7 +268,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findUserByuserName(String userName) {
-		return userRepository.findByuserName(userName);
+		return null;
 	}
 
 	@Override
@@ -292,7 +283,7 @@ public class UserServiceImpl implements UserService {
 		savedUserDto.setGender(userDto.getGender());
 		savedUserDto.setPassword(userDto.getPassword());
 		savedUserDto.setConfirmPassword(userDto.getConfirmPassword());
-		savedUserDto.setUserName(userDto.getUserName());
+		//savedUserDto.setUserName(userDto.getUserName());
 		System.out.println("After mapping:"+savedUserDto);
 		return savedUserDto;
 	}

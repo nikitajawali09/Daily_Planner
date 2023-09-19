@@ -1,13 +1,12 @@
 package com.usermanagement.entities;
 
-import java.time.LocalDate;
 import java.util.Date;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
@@ -28,40 +27,34 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
-	
+
 	@Column(nullable = false)
-	 private String name;
-	
+	private String name;
+
 	@Column(nullable = false, unique = true)
 	@Email(message = "Email address should be valid")
 	private String email;
-	
+
 	@Column(nullable = false)
 	private String password;
-	
+
 	@Column(nullable = false)
 	private String confirmPassword;
-	
+
 	@Column(nullable = false)
 	private String gender;
-	
-	private String profession;
-	
+
+
 	@Column(nullable = false)
 	private String address;
-	
+
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
-	//@Column(nullable = false)
+	@Column(nullable = false)
+	@CreatedDate
 	private Date createdDate;
-	
-	@Column(nullable = false, unique = true)
-	private String userName;
-	
-	  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	    @JoinTable(name = "users_roles",
-	        joinColumns = 
-	        @JoinColumn(name = "user_id", referencedColumnName = "id"),
-	            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id",updatable = false,insertable = false)
-	    )
-	    private List<Role> roles = new ArrayList<>();
+
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id", updatable = false, insertable = false))
+	private List<Role> roles = new ArrayList<>();
 }
