@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,4 +36,6 @@ public class TodoDto {
     //private Date targetDate;
     private Long userId;
     private Long remainingDaysToComplete;
+	@Email(message = "Email address should be valid")
+	private String email;
 }

@@ -41,50 +41,52 @@
             You have successfully created todo!
           </div>
       </div>
+      
+      <div th:if="${param.existingNoEmail}">
+          <div class="alert alert-info">
+            Given email-id is not registered!
+          </div>
+      </div>
+      
       <div class="card-body">
           <form
             method="post"
             role="form"
             th:action="@{/todos/save}"
-            th:object="${user}"
-          >
-            <div class="form-group mb-3">
-              <label class="form-label">Title</label>
+            th:object="${user}">
+          
+						<div class="form-group mb-3">
+							<label class="form-label">Title</label> <input
+								class="form-control" id="title" name="title"
+								placeholder="Enter title name" th:field="*{title}" type="text" />
+							<p th:errors="*{title}" class="text-danger"
+								th:if="${#fields.hasErrors('title')}"></p>
+						</div>
+
+						<div class="form-group mb-3">
+							<label class="form-label">Enter list description</label>
+							<textarea rows="5" cols="25" class="form-control"
+								id="description" name="description"
+								placeholder="Enter list description" th:field="*{description}"> </textarea>
+							<p th:errors="*{description}" class="text-danger"
+								th:if="${#fields.hasErrors('description')}"></p>
+						</div>
+						
+			 <div class="form-group mb-3">
+              <label class="form-label">Enter your registered email</label>
               <input
                       class="form-control"
-                      id="title"
-                      name="title"
-                      placeholder="Enter title name"
-                      th:field="*{title}"
-                      type="text"
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      th:field="*{email}"
+                      type="email"
               />
-              <p th:errors = "*{title}" class="text-danger"
-              th:if="${#fields.hasErrors('title')}"></p>
-            </div>
-            
-          
-            
-            <div class="form-group mb-3">
-<!--               <label class="form-label">Description</label> -->
-<!--               <input -->
-<!--                       class="form-control" -->
-<!--                       id="description" -->
-<!--                       name="description" -->
-<!--                       placeholder="Enter list description" -->
-<!--                       th:field="*{description}" -->
-<!--                       type="text" -->
-<!--               /> -->
-
-  <label class="form-label">Enter list description</label>
-              
-               <textarea rows="5" cols="25"  class="form-control" id="description"
-                      name="description"
-                      placeholder="Enter list description" th:field="*{description}"> </textarea>
-              <p th:errors = "*{description}" class="text-danger"
-              th:if="${#fields.hasErrors('description')}"></p>
+              <p th:errors = "*{email}" class="text-danger"
+                 th:if="${#fields.hasErrors('email')}"></p>
             </div>
 
-<!--             <div class="form-group mb-3"> -->
+						<!--             <div class="form-group mb-3"> -->
 <!--               <label class="form-label">Target date</label> -->
 <!--               <input -->
 <!--                       class="form-control" -->

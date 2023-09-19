@@ -13,8 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.usermanagement.dto.TodoDto;
-import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
+import com.usermanagement.repository.UserRepository;
 import com.usermanagement.service.TodoService;
 
 import jakarta.validation.Valid;
@@ -27,9 +27,12 @@ public class TodoController {
 	Logger log = LoggerFactory.getLogger(TodoController.class);
 
 	private final TodoService todoService;
+	
+	private final UserRepository userRepository;
 
-	public TodoController(TodoService todoService) {
+	public TodoController(TodoService todoService,UserRepository userRepository) {
 		this.todoService = todoService;
+		this.userRepository=userRepository;
 	}
 	
 	// handler method to handle user registration form request
@@ -54,13 +57,21 @@ public class TodoController {
         try {
         	log.info("Entering into AuthController :: registration");
 			
-
 			log.info("Entering into AuthController :: hasErrors");
 			if(result.hasErrors()){
 			    model.addAttribute("user", todoDto);
 			    return "/createTodo";
 			}
 			
+			User user=userRepository.findByEmail(todoDto.getEmail());
+			
+			if(user!=null) {
+				
+				todoDto.setUserId(user.getId());
+				
+			}else {
+				return "redirect:/todos/createTodo?existingNoEmail";
+			}
 			
 			log.info("Exiting into AuthController :: hasErrors");
 			log.info("Entering into AuthController :: saveUser");
