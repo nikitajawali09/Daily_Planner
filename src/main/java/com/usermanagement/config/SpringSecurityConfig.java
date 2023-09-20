@@ -5,19 +5,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -36,28 +31,24 @@ public class SpringSecurityConfig {
 	    // configure SecurityFilterChain
 	    @Bean
 	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	        http.csrf().disable()
+	    
+	        http.
+	        csrf().disable()
 	                .authorizeHttpRequests()
 	                .requestMatchers("/register/**").permitAll()
 	                .requestMatchers("/index").permitAll()
 	                .requestMatchers("/login").hasAnyRole("USER","ADMIN")
-	                .requestMatchers("/users").hasAnyRole("USER","ADMIN")
+	                .requestMatchers("/users").hasAnyRole("USER","ADMIN")  
 	                .requestMatchers("/todos/**").hasRole("USER")
-	                .requestMatchers("/todos/**").hasRole("USER")
-	                .requestMatchers("/users/**").hasRole("USER");
-	        
-	        
-	        if(http.csrf().disable()
-	                .authorizeHttpRequests().requestMatchers("/login").hasRole("USER") != null) {
-	        	
-	        	 http.csrf().disable()
-	                .authorizeHttpRequests().requestMatchers("/login").hasRole("USER")
+	                .requestMatchers("/users/**").hasAnyRole("USER","ADMIN")  
+	               // .requestMatchers("/adminlogin").hasAnyRole("USER","ADMIN")
+	                .anyRequest().authenticated()
 	                .and()
 	                .formLogin(
 	                        form -> form
 	                                .loginPage("/login")
 	                                .loginProcessingUrl("/login")
-	                                .defaultSuccessUrl("/todos/createTodo")
+	                                .defaultSuccessUrl("/welcome")        
 	                                .permitAll()
 	          
 	                ).logout(
@@ -66,32 +57,22 @@ public class SpringSecurityConfig {
 	                                .permitAll()
 
 	                );
-	        	
-	        
-	        }
-	        
-	        if(http.csrf().disable()
-	                .authorizeHttpRequests().requestMatchers("/login").hasRole("ADMIN") != null) {
-	        	
-	        	 http.csrf().disable()
-	                .authorizeHttpRequests().requestMatchers("/login").hasRole("ADMIN")
-	                .and()
-	                .formLogin(
-	                        form -> form
-	                                .loginPage("/login")
-	                                .loginProcessingUrl("/login")
-	                                .defaultSuccessUrl("/users")
-	                                .permitAll()
-	          
-	                ).logout(
-	                        logout -> logout
-	                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	                                .permitAll()
+//	                .formLogin(
+//	                        form -> form
+//	                                .loginPage("/adminlogin")
+//	                                .loginProcessingUrl("/adminlogin")
+//	                                .defaultSuccessUrl("/users")          
+//	                                .permitAll()
+//	          
+//	                ).logout(
+//	                        logout -> logout
+//	                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//	                                .permitAll()
+//
+//	                );
+//	                
+	                
 
-	                );
-	        	
-	        
-	        }
 	        
 	      
 	        

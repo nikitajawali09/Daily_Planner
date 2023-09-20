@@ -1,6 +1,7 @@
 package com.usermanagement.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
+import com.usermanagement.entities.UsersRoles;
+import com.usermanagement.repository.UserRepository;
+import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.UserService;
 
 import jakarta.validation.Valid;
@@ -28,9 +32,14 @@ public class AuthController {
 	Logger log = LoggerFactory.getLogger(AuthController.class);
 	
 	  private UserService userService;
+	  
+	  private final UserRolesRepository userRolesRepo;
 
-	    public AuthController(UserService userService) {
+	  //private final UserRepository userRepo;
+	    public AuthController(UserService userService,UserRolesRepository userRolesRepo) {
 	        this.userService = userService;
+	        
+	        this.userRolesRepo=userRolesRepo;
 	    }
 	    
 	    // handler method to handle home page request
@@ -39,12 +48,23 @@ public class AuthController {
 	        return "index";
 	    }
 	    
+	    
 
 	    // handler method to handle login request
 	    @GetMapping("/login")
 	    public String login(Model model){
 	        return "login";
 	    }
+	    
+	    // handler method to handle login request
+	    @GetMapping("/adminlogin")
+	    public String adminlogin(Model model){
+	        return "adminlogin";
+	    }
+	    
+	  
+	    
+	   
 
 	    // handler method to handle user registration form request
 	    @GetMapping("/register")
@@ -107,12 +127,50 @@ public class AuthController {
 	    }
 	    
 	 // handler method to handle list of users
+	    @PreAuthorize("hasRole('ADMIN')")
 	    @GetMapping("/users")
 	    public String users(Model model){
 	    	
 	        List<UserDto> users = userService.findAllUsers();	        
 	        model.addAttribute("users", users);
 	        return "users";
+	        
+	    }
+	    
+		@PreAuthorize("hasAnyRole('ADMIN','USER')")
+		@GetMapping("/welcome")
+		public String welcome(Model model) {
+			List<UserDto> users = userService.findAllUsers();
+			model.addAttribute("users", users);
+			return "welcome";
+		}
+		
+		// handler method to handle edit student request
+	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+	    @GetMapping("/users/{id}/assign")
+	    public String assignRole(@PathVariable("id") Long id,
+	                              Model model){
+	    	
+	       // UserDto user = userService.getStudentById(id);
+	        
+	        Long findByRoleId = userRolesRepo.findRoleId(id);
+	       
+	        System.out.println("findByRoleId:"+findByRoleId);
+	        
+	        if (findByRoleId == 2) {
+				System.out.println("Inside todos");
+				return "redirect:/todos/createTodo";
+			}
+	        
+			if (findByRoleId == 1) {
+				System.out.println("Inside users");
+				 return "redirect:/users";
+			}
+			
+	        
+//	      System.out.println("User:"+user);
+//	        model.addAttribute("user", user);
+			return null;
 	        
 	    }
 
@@ -123,6 +181,8 @@ public class AuthController {
 	                              Model model){
 	    	
 	        UserDto user = userService.getStudentById(id);
+	        
+	        
 	      
 	        model.addAttribute("user", user);
 	        return "edit-user";
@@ -136,6 +196,7 @@ public class AuthController {
 	                                @Valid @ModelAttribute("user") UserDto userDto,
 	                                BindingResult result,
 	                                Model model){
+	    	System.out.println("Inside updateStudent");
 	        if(result.hasErrors()){
 	        	 model.addAttribute("user", userDto);
 	            return "edit-user";
