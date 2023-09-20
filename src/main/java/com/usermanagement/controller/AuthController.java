@@ -23,34 +23,30 @@ import jakarta.validation.Valid;
 @Controller
 @CrossOrigin("*")
 public class AuthController {
-	
+
 	Logger log = LoggerFactory.getLogger(AuthController.class);
 
 	private UserService userService;
-	private final UserRolesRepository userRolesRepo;
-	private final UserRepository userRepo;
-	  
-	public AuthController(UserService userService, UserRolesRepository userRolesRepo, UserRepository userRepo) {
+
+	public AuthController(UserService userService) {
 		this.userService = userService;
-		this.userRolesRepo = userRolesRepo;
-		this.userRepo = userRepo;
 
 	}
-	
+
 	// handler method to handle user registration form request
-    @GetMapping("/register")
-    public String showRegistrationForm(Model model){
-    	
-    	log.info("Entering into AuthController :: showRegistrationForm");
-       
-        UserDto user = new UserDto();
-        model.addAttribute("user", user);
-        
-        log.info("Exiting into AuthController :: showRegistrationForm");
-        return "register";
-    }
-    
-    // handler method to handle user registration form submit request
+	@GetMapping("/register")
+	public String showRegistrationForm(Model model) {
+
+		log.info("Entering into AuthController :: showRegistrationForm");
+
+		UserDto user = new UserDto();
+		model.addAttribute("user", user);
+
+		log.info("Exiting into AuthController :: showRegistrationForm");
+		return "register";
+	}
+
+	// handler method to handle user registration form submit request
 	@PostMapping("/register/save")
 	public String registration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, Model model) {
 
@@ -80,141 +76,67 @@ public class AuthController {
 			log.info("Exiting into AuthController :: registration");
 			return "redirect:/register?success";
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return null;
 	}
-	    
-	    // handler method to handle home page request
-	    @GetMapping("/index")
-	    public String home(){
-	        return "index";
-	    }   
-	    
-	    @GetMapping("/login")
-	    public String login(){
-	        return "login";
-	    }
 
-	    // handler method to handle login request
-//	    @GetMapping("/login")
-//	    public String login(Model model){
-//	    	UserDto user = new UserDto();
-//	        model.addAttribute("user", user);
-//	        System.out.println("User login :"+user);
-//	        return "login";
-//	    }
-	    
-//	    // handler method to handle login request
-//	    @GetMapping("/adminlogin")
-//	    public String adminlogin(Model model){
-//	        return "adminlogin";
-//	    }
-	    
-	  
-	    
-	   
+	// handler method to handle home page request
+	@GetMapping("/index")
+	public String home() {
+		return "index";
+	}
 
-	    
-	    
-	 // handler method to handle list of users
-	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	    @GetMapping("/users")
-	    public String users(Model model){
-	    	
-	        List<UserDto> users = userService.findAllUsers();	        
-	        model.addAttribute("users", users);
-	        return "users";
-	        
-	    }
-	    
-//		@PreAuthorize("hasAnyRole('ADMIN','USER')")
-//		@GetMapping("/welcome")
-//		public String welcome(Model model) {
-//			List<UserDto> users = userService.findAllUsers();
-//			model.addAttribute("users", users);
-//			return "welcome";
-//		}
-		
-		// handler method to handle edit student request
-	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	    @PostMapping("/assignRole")
-	    public String assignRole(@Valid @ModelAttribute("user") UserDto todoDto,
-                BindingResult result,
-                Model model){
-	    	
-	    	 System.out.println("User todo  :"+todoDto.getUsername());
-	    	 
-	    	 //todoDto.setPassword(passwordEncoder.encode(todoDto.getPassword()));
-	    	 
-	    	 //System.out.println("User todo password  :"+todoDto.get());
-	    	 
-	    	 User user = userRepo.findByUsername(todoDto.getUsername());
-	        Long findByRoleId = userRolesRepo.findRoleId(user.getId());
-	       
-	        System.out.println("findByRoleId:"+findByRoleId);
-	        
-	        if (findByRoleId == 2) {
-				System.out.println("Inside todos");
-				return "redirect:/todos/createTodo";
-			}
-	        
-			if (findByRoleId == 1) {
-				System.out.println("Inside users");
-				 return "redirect:/users";
-			}
-			
-	        
-//	      System.out.println("User:"+user);
-//	        model.addAttribute("user", user);
-			return "redirect:/users";
-	        
-	    }
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 
-	    // handler method to handle edit student request
-	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	    @GetMapping("/users/{id}/edit")
-	    public String editStudent(@PathVariable("id") Long id,
-	                              Model model){
-	    	
-	        UserDto user = userService.getStudentById(id);
-	        
-	        
-	      
-	        model.addAttribute("user", user);
-	        return "edit-user";
-	    }
-	 
+	// handler method to handle list of users
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@GetMapping("/users")
+	public String users(Model model) {
 
-	 // handler method to handle edit student form submit request
-	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	    @PostMapping("/users/{id}")
-	    public String updateStudent(@PathVariable("id") Long id,
-	                                @Valid @ModelAttribute("user") UserDto userDto,
-	                                BindingResult result,
-	                                Model model){
-	    	System.out.println("Inside updateStudent");
-	        if(result.hasErrors()){
-	        	 model.addAttribute("user", userDto);
-	            return "edit-user";
-	        }
-	        
-	        userDto.setId(id);
-	        userService.updateUser(userDto);
-	        return "redirect:/users";
-	    }
-	    
-	    
-	    // Handler method to handle delete student request
-	    @GetMapping("/users/{id}/delete")
-	    public String deleteStudent(@PathVariable("id") Long userId){
-	    	userService.deleteUser(userId);
-	        return "redirect:/users";
-	    }
-	    
-	    
-	 
-	    
+		List<UserDto> users = userService.findAllUsers();
+
+		model.addAttribute("users", users);
+		return "users";
+
+	}
+
+	// handler method to handle edit student request
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@GetMapping("/users/{id}/edit")
+	public String editStudent(@PathVariable("id") Long id, Model model) {
+
+		UserDto user = userService.getStudentById(id);
+
+		model.addAttribute("user", user);
+		return "edit-user";
+	}
+
+	// handler method to handle edit student form submit request
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PostMapping("/users/{id}")
+	public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("user") UserDto userDto,
+			BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			model.addAttribute("user", userDto);
+			return "edit-user";
+		}
+
+		userDto.setId(id);
+		userService.updateUser(userDto);
+		return "redirect:/users";
+	}
+
+	// Handler method to handle delete student request
+	@GetMapping("/users/{id}/delete")
+	public String deleteStudent(@PathVariable("id") Long userId) {
+		userService.deleteUser(userId);
+		return "redirect:/users";
+	}
+
 }
-

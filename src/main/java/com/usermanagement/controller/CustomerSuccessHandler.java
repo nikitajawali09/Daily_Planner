@@ -22,9 +22,9 @@ public class CustomerSuccessHandler implements AuthenticationSuccessHandler{
 			Authentication authentication) throws IOException, ServletException {
 		
 		var authorities = authentication.getAuthorities();
-		System.out.println("Auth:"+authorities);
+		
 		var roles = authorities.stream().map(r -> r.getAuthority()).findFirst();
-		System.out.println("Roles:"+roles);
+		
 		if(roles.orElse("").equals("ROLE_ADMIN")) {
 			response.sendRedirect("/users");		
 		}else if(roles.orElse("").equals("ROLE_USER")) {

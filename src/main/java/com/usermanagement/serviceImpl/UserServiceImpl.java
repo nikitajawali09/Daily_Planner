@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService {
 		existingUser.setAddress(user.getAddress());
 		//existingUser.setUserName(user.getUserName());
 		
-		System.out.println("existinguser:"+existingUser);
+		
 		User updatedUser = userRepository.save(existingUser);
 
 		return modelMapper.map(updatedUser, UserDto.class);
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "id", userId));
 
-			System.out.println("roles:"+userId);
+			
 			//userRolesRepository.deleteById(userId);
 			userDelete(userId);
 			
@@ -180,7 +180,7 @@ public class UserServiceImpl implements UserService {
 	@Modifying
 	private void userDelete(Long userId) {
 		try {
-		System.out.println("after roles:"+userId);
+		
 		userRepository.deleteById(userId);
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -232,7 +232,7 @@ public class UserServiceImpl implements UserService {
 			userDto.setId(user.getId());
 			userDto.setFirstName(user.getName());
 			userDto.setEmail(user.getEmail());
-			
+			userDto.setCreatedDate(user.getCreatedDate());
 //			List<Todo> todoList = todoRepository.findUserId(userDto.getId());
 //			
 //			for (Todo todo : todoList) {
@@ -259,7 +259,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getStudentById(Long id) {
 		User userDto = userRepository.findById(id).get();
-		System.out.println("Find by id:"+userDto);
+		
 		UserDto savedUserDto = new UserDto();
 		savedUserDto.setId(userDto.getId());
 		savedUserDto.setFirstName(userDto.getName());
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
 		savedUserDto.setPassword(userDto.getPassword());
 		savedUserDto.setConfirmPassword(userDto.getConfirmPassword());
 		//savedUserDto.setUserName(userDto.getUserName());
-		System.out.println("After mapping:"+savedUserDto);
+		
 		return savedUserDto;
 	}
 }

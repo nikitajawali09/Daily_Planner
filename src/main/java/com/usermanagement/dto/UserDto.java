@@ -1,6 +1,10 @@
 package com.usermanagement.dto;
 
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -34,6 +38,9 @@ public class UserDto {
 	private String address;
 
 	private String username;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
+	private Date createdDate;
 
 
 }
