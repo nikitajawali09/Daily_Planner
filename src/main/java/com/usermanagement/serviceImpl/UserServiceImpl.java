@@ -7,32 +7,20 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-
 import com.usermanagement.constant.Constant;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.Role;
-import com.usermanagement.entities.Todo;
 import com.usermanagement.entities.User;
-import com.usermanagement.exception.EmailAlreadyExistsException;
 import com.usermanagement.exception.ResourceNotFoundException;
-import com.usermanagement.exception.UserNameAlreadyExistsException;
 import com.usermanagement.repository.RoleRepository;
-import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.repository.UserRepository;
-import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.UserService;
-
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,20 +29,17 @@ public class UserServiceImpl implements UserService {
 	Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	private final UserRepository userRepository;
-
 	private final RoleRepository roleRepository;
 	private final PasswordEncoder passwordEncoder;
-	
-	private final UserRolesRepository userRolesRepository;
 
 
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			PasswordEncoder passwordEncoder,ModelMapper modelMapper,UserRolesRepository userRolesRepository) {
+			PasswordEncoder passwordEncoder,ModelMapper modelMapper) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.modelMapper=modelMapper;
-		this.userRolesRepository=userRolesRepository;
+		
 	}
 
 
@@ -72,10 +57,11 @@ public class UserServiceImpl implements UserService {
 				User optionalEmail = userRepository.findByEmail(userDto.getEmail());
 
 				if (optionalEmail!=null) {
+					
 					isValid = false;
 					response.put(Constant.FAILED, 0);
 					response.put(Constant.MESSAGE, "Email-Id already exists :Already Registered ?");
-					// added login.html form
+					
 
 				}
 			}
@@ -212,7 +198,6 @@ public class UserServiceImpl implements UserService {
 			// encrypt the password using spring security
 			user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 			user.setConfirmPassword(passwordEncoder.encode(userDto.getConfirmPassword()));
-			user.setGender(userDto.getGender());
 			user.setAddress(userDto.getAddress());
 		
 			user.setCreatedDate(new Date());
@@ -280,7 +265,6 @@ public class UserServiceImpl implements UserService {
 		savedUserDto.setFirstName(userDto.getName());
 		savedUserDto.setEmail(userDto.getEmail());
 		savedUserDto.setAddress(userDto.getAddress());
-		savedUserDto.setGender(userDto.getGender());
 		savedUserDto.setPassword(userDto.getPassword());
 		savedUserDto.setConfirmPassword(userDto.getConfirmPassword());
 		//savedUserDto.setUserName(userDto.getUserName());

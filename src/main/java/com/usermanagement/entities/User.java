@@ -42,10 +42,6 @@ public class User {
 	private String confirmPassword;
 
 	@Column(nullable = false)
-	private String gender;
-
-
-	@Column(nullable = false)
 	private String address;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")

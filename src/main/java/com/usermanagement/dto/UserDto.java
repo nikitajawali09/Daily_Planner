@@ -29,9 +29,6 @@ public class UserDto {
 	@NotEmpty(message = "User confirm password should not be null or empty")
 	private String confirmPassword;
 	
-	@NotEmpty(message = "User gender should not be null or empty")
-	private String gender;
-	
 	@Size(min=3,message = "User address cannot be less than 3 characters")
 	@NotEmpty(message = "User address should not be null or empty")
 	private String address;

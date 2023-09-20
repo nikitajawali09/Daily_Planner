@@ -1,7 +1,6 @@
 package com.usermanagement.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
-import com.usermanagement.entities.UsersRoles;
 import com.usermanagement.repository.UserRepository;
 import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.UserService;
-
 import jakarta.validation.Valid;
 
 @Controller
@@ -30,104 +25,101 @@ import jakarta.validation.Valid;
 public class AuthController {
 	
 	Logger log = LoggerFactory.getLogger(AuthController.class);
-	
-	  private UserService userService;
-	  
-	  private final UserRolesRepository userRolesRepo;
 
-	  //private final UserRepository userRepo;
-	    public AuthController(UserService userService,UserRolesRepository userRolesRepo) {
-	        this.userService = userService;
-	        
-	        this.userRolesRepo=userRolesRepo;
-	    }
+	private UserService userService;
+	private final UserRolesRepository userRolesRepo;
+	private final UserRepository userRepo;
+	  
+	public AuthController(UserService userService, UserRolesRepository userRolesRepo, UserRepository userRepo) {
+		this.userService = userService;
+		this.userRolesRepo = userRolesRepo;
+		this.userRepo = userRepo;
+
+	}
+	
+	// handler method to handle user registration form request
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model){
+    	
+    	log.info("Entering into AuthController :: showRegistrationForm");
+       
+        UserDto user = new UserDto();
+        model.addAttribute("user", user);
+        
+        log.info("Exiting into AuthController :: showRegistrationForm");
+        return "register";
+    }
+    
+    // handler method to handle user registration form submit request
+	@PostMapping("/register/save")
+	public String registration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, Model model) {
+
+		try {
+
+			log.info("Entering into AuthController :: registration");
+			User existingEmail = userService.findUserByEmail(userDto.getEmail());
+
+			if (existingEmail != null && existingEmail.getEmail() != null && !existingEmail.getEmail().isEmpty()) {
+				result.rejectValue("email", null, "There is already an account registered with the same email");
+			}
+
+			if (userDto.getConfirmPassword() != null && userDto.getPassword() != null) {
+				if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
+					result.rejectValue("password", null, "Password and Confirm Password should be same");
+				}
+			}
+
+			log.info("Entering into AuthController :: hasErrors");
+			if (result.hasErrors()) {
+				model.addAttribute("user", userDto);
+				return "/register";
+			}
+
+			userService.saveUser(userDto);
+
+			log.info("Exiting into AuthController :: registration");
+			return "redirect:/register?success";
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	    
 	    // handler method to handle home page request
 	    @GetMapping("/index")
 	    public String home(){
 	        return "index";
-	    }
+	    }   
 	    
-	    
-
-	    // handler method to handle login request
 	    @GetMapping("/login")
-	    public String login(Model model){
+	    public String login(){
 	        return "login";
 	    }
-	    
+
 	    // handler method to handle login request
-	    @GetMapping("/adminlogin")
-	    public String adminlogin(Model model){
-	        return "adminlogin";
-	    }
+//	    @GetMapping("/login")
+//	    public String login(Model model){
+//	    	UserDto user = new UserDto();
+//	        model.addAttribute("user", user);
+//	        System.out.println("User login :"+user);
+//	        return "login";
+//	    }
+	    
+//	    // handler method to handle login request
+//	    @GetMapping("/adminlogin")
+//	    public String adminlogin(Model model){
+//	        return "adminlogin";
+//	    }
 	    
 	  
 	    
 	   
 
-	    // handler method to handle user registration form request
-	    @GetMapping("/register")
-	    public String showRegistrationForm(Model model){
-	    	log.info("Entering into AuthController :: showRegistrationForm");
-	        // create model object to store form data
-	        UserDto user = new UserDto();
-	        model.addAttribute("user", user);
-	        log.info("Exiting into AuthController :: showRegistrationForm");
-	        return "register";
-	    }
 	    
-	    // handler method to handle user registration form submit request
-	    @PostMapping("/register/save")
-	    public String registration(@Valid @ModelAttribute("user") UserDto userDto,
-	                               BindingResult result,
-	                               Model model){
-	        try {
-	        	log.info("Entering into AuthController :: registration");
-				User existingEmail = userService.findUserByEmail(userDto.getEmail());
-
-				if(existingEmail != null && existingEmail.getEmail() != null && !existingEmail.getEmail().isEmpty()){
-				    result.rejectValue("email", null,
-				            "There is already an account registered with the same email");
-				}
-				
-				//User existingUser = userService.findUserByuserName(userDto.getUserName());
-
-//				if(existingUser != null && existingUser.getUserName() != null && !existingUser.getUserName().isEmpty()){
-//				    result.rejectValue("userName", null,
-//				            "There is already an account registered with the same username. kindly try with different username");
-//				}
-				
-				
-				if(userDto.getConfirmPassword() != null && userDto.getPassword() != null 
-						){
-					if(!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-				    result.rejectValue("password", null,
-				            "Password and Confirm Password should be same");
-					}
-				}
-				
-				
-				log.info("Entering into AuthController :: hasErrors");
-				if(result.hasErrors()){
-				    model.addAttribute("user", userDto);
-				    return "/register";
-				}
-				log.info("Exiting into AuthController :: hasErrors");
-				log.info("Entering into AuthController :: saveUser");
-				userService.saveUser(userDto);
-				log.info("Exiting into AuthController :: saveUser");
-				  log.info("Exiting into AuthController :: registration");
-				return "redirect:/register?success";
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-	    }
 	    
 	 // handler method to handle list of users
-	    @PreAuthorize("hasRole('ADMIN')")
+	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
 	    @GetMapping("/users")
 	    public String users(Model model){
 	    	
@@ -137,23 +129,29 @@ public class AuthController {
 	        
 	    }
 	    
-		@PreAuthorize("hasAnyRole('ADMIN','USER')")
-		@GetMapping("/welcome")
-		public String welcome(Model model) {
-			List<UserDto> users = userService.findAllUsers();
-			model.addAttribute("users", users);
-			return "welcome";
-		}
+//		@PreAuthorize("hasAnyRole('ADMIN','USER')")
+//		@GetMapping("/welcome")
+//		public String welcome(Model model) {
+//			List<UserDto> users = userService.findAllUsers();
+//			model.addAttribute("users", users);
+//			return "welcome";
+//		}
 		
 		// handler method to handle edit student request
 	    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-	    @GetMapping("/users/{id}/assign")
-	    public String assignRole(@PathVariable("id") Long id,
-	                              Model model){
+	    @PostMapping("/assignRole")
+	    public String assignRole(@Valid @ModelAttribute("user") UserDto todoDto,
+                BindingResult result,
+                Model model){
 	    	
-	       // UserDto user = userService.getStudentById(id);
-	        
-	        Long findByRoleId = userRolesRepo.findRoleId(id);
+	    	 System.out.println("User todo  :"+todoDto.getUsername());
+	    	 
+	    	 //todoDto.setPassword(passwordEncoder.encode(todoDto.getPassword()));
+	    	 
+	    	 //System.out.println("User todo password  :"+todoDto.get());
+	    	 
+	    	 User user = userRepo.findByUsername(todoDto.getUsername());
+	        Long findByRoleId = userRolesRepo.findRoleId(user.getId());
 	       
 	        System.out.println("findByRoleId:"+findByRoleId);
 	        
@@ -170,7 +168,7 @@ public class AuthController {
 	        
 //	      System.out.println("User:"+user);
 //	        model.addAttribute("user", user);
-			return null;
+			return "redirect:/users";
 	        
 	    }
 
@@ -216,6 +214,7 @@ public class AuthController {
 	    }
 	    
 	    
+	 
 	    
 }
 

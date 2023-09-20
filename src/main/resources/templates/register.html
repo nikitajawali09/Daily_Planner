@@ -43,8 +43,9 @@
             method="post"
             role="form"
             th:action="@{/register/save}"
-            th:object="${user}"
-          >
+            th:object="${user}" >
+            
+            
             <div class="form-group mb-3">
               <label class="form-label">Full Name</label>
               <input
@@ -68,11 +69,11 @@
                       name="email"
                       placeholder="Enter email address"
                       th:field="*{email}"
-                      type="email"
-              />
+                      type="email" />
               <p th:errors = "*{email}" class="text-danger"
                  th:if="${#fields.hasErrors('email')}"></p>
             </div>
+
 
             <div class="form-group mb-3">
               <label class="form-label">Password</label>
@@ -82,11 +83,11 @@
                       name="password"
                       placeholder="Enter password"
                       th:field="*{password}"
-                      type="password"
-              />
+                      type="password" />
               <p th:errors = "*{password}" class="text-danger"
                  th:if="${#fields.hasErrors('password')}"></p>
             </div>
+            
             
              <div class="form-group mb-3">
               <label class="form-label">Confirm Password</label>
@@ -96,27 +97,13 @@
                       name="confirmPassword"
                       placeholder="Enter confirm password"
                       th:field="*{confirmPassword}"
-                      type="password"
-              />
+                      type="password" />
               <p th:errors = "*{confirmPassword}" class="text-danger"
                  th:if="${#fields.hasErrors('confirmPassword')}"></p>
             </div>
+  
             
-<!--              <div class="form-group mb-3"> -->
-<!--               <label class="form-label">Create username:</label> -->
-<!--               <input -->
-<!--                       class="form-control" -->
-<!--                       id="userName" -->
-<!--                       name="userName" -->
-<!--                       placeholder="create your username" -->
-<!--                       th:field="*{userName}" -->
-<!--                       type="text" -->
-<!--               /> -->
-<!--               <p th:errors = "*{userName}" class="text-danger" -->
-<!--                  th:if="${#fields.hasErrors('userName')}"></p> -->
-<!--             </div> -->
-            
-              <div class="form-group mb-3">
+            <div class="form-group mb-3">
               <label class="form-label">Enter your address</label>
               
                <textarea rows="5" cols="25"  class="form-control" id="address"
@@ -124,22 +111,9 @@
                       placeholder="Enter your address" th:field="*{address}"> </textarea>
               <p th:errors = "*{address}" class="text-danger"
                  th:if="${#fields.hasErrors('address')}"></p>
-           
             </div>
             
-         <div class="form-group mb-3">
-	            <label>Gender:</label> 
-				<input type="radio" th:field="*{gender}" value="Male" /> Male 
-				<input  type="radio" th:field="*{gender}" value="Female" /> Female <br />
-				
-				<br>
-            
-            <div class="form-group">
-              <button class="btn btn-primary" type="submit">Register</button>
-              <span>Already registered? <a th:href="@{/login}">Login here</a></span>
-            </div>      
-          </div>
-          
+  
      
              
              
