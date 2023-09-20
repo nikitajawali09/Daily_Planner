@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
-import com.usermanagement.repository.UserRepository;
-import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 

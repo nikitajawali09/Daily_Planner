@@ -95,16 +95,6 @@ public class TodoController {
 		}
 		return null;
     }
-//
-//	@PreAuthorize("hasAnyRole('ADMIN','USER')")
-//	@PostMapping("/addNewTodo")
-//	public ResponseEntity<TodoDto> addNewTodo(@Valid @RequestBody TodoDto todoDto) {
-//
-//		log.info("Entering into TodoController :: addNewTodo");
-//		TodoDto savedTodo = todoService.addTodo(todoDto);
-//		log.info("Exiting into TodoController :: addNewTodo");
-//		return new ResponseEntity<>(savedTodo, HttpStatus.CREATED);
-//	}
 
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/getTodoById/{id}")

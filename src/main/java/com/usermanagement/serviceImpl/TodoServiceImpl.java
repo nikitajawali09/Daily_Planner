@@ -35,6 +35,9 @@ public class TodoServiceImpl implements TodoService {
 			// long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
 			// long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
 			// todo.setRemainingDaysToComplete(diff);
+			
+			
+			
 			Todo savedTodo = todoRepository.save(todo);
 			TodoDto savedTodoDto = modelMapper.map(savedTodo, TodoDto.class);
 			return savedTodoDto;
