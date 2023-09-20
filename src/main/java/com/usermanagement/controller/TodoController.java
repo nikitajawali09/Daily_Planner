@@ -35,6 +35,16 @@ public class TodoController {
 		this.userRepository=userRepository;
 	}
 	
+	   // http://localhost:8080/view/todos
+		@RequestMapping("/todos")
+		public String todos(Model model) {
+
+			List<TodoDto> todos = todoService.getAllTodos();
+
+			model.addAttribute("todos", todos);
+			return "todos.html";
+		}
+	
 	// handler method to handle user registration form request
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/createTodo")

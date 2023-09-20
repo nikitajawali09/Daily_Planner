@@ -2,17 +2,18 @@ package com.usermanagement.controller;
 
 import java.io.IOException;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+
 
 @Component
+@Service
 public class CustomerSuccessHandler implements AuthenticationSuccessHandler{
 
 

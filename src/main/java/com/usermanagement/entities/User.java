@@ -4,16 +4,10 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.data.annotation.CreatedDate;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 
 @ToString
 @Getter
@@ -46,7 +40,6 @@ public class User {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/mm/yyyy")
 	@Column(nullable = false)
-	@CreatedDate
 	private Date createdDate;
 
 

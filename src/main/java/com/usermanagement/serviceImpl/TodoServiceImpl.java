@@ -2,22 +2,15 @@ package com.usermanagement.serviceImpl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
-import com.usermanagement.controller.CustomerSuccessHandler;
 import com.usermanagement.dto.TodoDto;
 import com.usermanagement.entities.Todo;
 import com.usermanagement.exception.ResourceNotFoundException;
 import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.service.TodoService;
-
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +18,7 @@ import java.util.stream.Collectors;
 public class TodoServiceImpl implements TodoService {
 
 	private TodoRepository todoRepository;
-	
+
 	private ModelMapper modelMapper;
 
 	@Override
@@ -37,11 +30,11 @@ public class TodoServiceImpl implements TodoService {
 			todo.setCreatedDate(new Date());
 
 			// Date firstDate = todo.getTargetDate();
-			  //Date secondDate = todo.getCreatedDate();
+			// Date secondDate = todo.getCreatedDate();
 
-			//long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
-		    //long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-			//todo.setRemainingDaysToComplete(diff);
+			// long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+			// long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+			// todo.setRemainingDaysToComplete(diff);
 			Todo savedTodo = todoRepository.save(todo);
 			TodoDto savedTodoDto = modelMapper.map(savedTodo, TodoDto.class);
 			return savedTodoDto;
