@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
+import com.usermanagement.service.TodoService;
 import com.usermanagement.service.UserService;
 import jakarta.validation.Valid;
 
@@ -25,9 +28,11 @@ public class AuthController {
 	Logger log = LoggerFactory.getLogger(AuthController.class);
 
 	private UserService userService;
+	private TodoService todoService;
 
-	public AuthController(UserService userService) {
+	public AuthController(UserService userService,TodoService todoService) {
 		this.userService = userService;
+		this.todoService=todoService;
 
 	}
 
@@ -97,7 +102,6 @@ public class AuthController {
 	public String users(Model model) {
 
 		List<UserDto> users = userService.findAllUsers();
-
 		model.addAttribute("users", users);
 		return "users";
 
@@ -113,6 +117,19 @@ public class AuthController {
 		model.addAttribute("user", user);
 		return "edit-user";
 	}
+	
+	// handler method to handle edit student request
+		@PreAuthorize("hasAnyRole('ADMIN','USER')")
+		@GetMapping("/users/{id}/view")
+		public String view(@PathVariable("id") Long id, Model model) {
+
+			System.out.println("todo id:"+id);
+			TodoDto user = todoService.getUserTodoById(id);
+
+			System.out.println("todo user:"+user);
+			model.addAttribute("user", user);
+			return "todo-view";
+		}
 
 	// handler method to handle edit student form submit request
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")

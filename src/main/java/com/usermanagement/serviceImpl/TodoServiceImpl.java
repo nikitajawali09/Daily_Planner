@@ -7,8 +7,14 @@ import com.usermanagement.entities.Todo;
 import com.usermanagement.exception.ResourceNotFoundException;
 import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.service.TodoService;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +26,9 @@ public class TodoServiceImpl implements TodoService {
 	private TodoRepository todoRepository;
 
 	private ModelMapper modelMapper;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	@Transactional
@@ -131,5 +140,45 @@ public class TodoServiceImpl implements TodoService {
 		Todo updatedTodo = todoRepository.save(todo);
 
 		return modelMapper.map(updatedTodo, TodoDto.class);
+	}
+
+	@Override
+	public TodoDto getUserTodoById(Long id) {
+		
+		TodoDto todoDto = null;
+		//List<TodoDto> todoDtoList = null;
+
+		StringBuilder sqlQuery = new StringBuilder(
+				"SELECT u.id,t.title,t.description,t.created_date,t.target_date FROM user_management.todos t inner join users u " + " on t.users_id=u.id where u.id=:id");
+
+		Query query = entityManager.createNativeQuery(sqlQuery.toString());
+		
+		query.setParameter("id", id);
+		
+			try {
+				
+			List<Object[]> obj = query.getResultList();
+			
+			
+			if(!obj.isEmpty()) {
+				
+				for (Object[] record : obj) {
+
+					todoDto = new TodoDto();
+					todoDto.setUserId(Long.parseLong(String.valueOf(record[0])));
+					todoDto.setTitle(String.valueOf(record[1]));
+					todoDto.setDescription(String.valueOf(record[2]));
+					todoDto.setCreatedDate((Date)record[3]);
+					todoDto.setTargetDate((Date)record[4]);
+
+				}
+				
+			}
+			
+			//return modelMapper.map(todoDto, TodoDto.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return todoDto;
 	}
 }
