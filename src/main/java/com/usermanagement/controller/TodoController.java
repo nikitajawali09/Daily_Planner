@@ -46,7 +46,7 @@ public class TodoController {
 		}
 	
 	// handler method to handle user registration form request
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasRole('USER')")
     @GetMapping("/createTodo")
     public String createTodo(Model model){
     	log.info("Entering into AuthController :: createTodo");
@@ -59,7 +59,7 @@ public class TodoController {
 	
 	   // handler method to handle user registration form submit request
 	//@PreAuthorize("hasAnyRole('ADMIN','USER')")
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PreAuthorize("hasRole('USER')")
     @PostMapping("/save")
     public String todo(@Valid @ModelAttribute("user") TodoDto todoDto,
                                BindingResult result,
