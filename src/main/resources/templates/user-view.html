@@ -61,23 +61,36 @@ body {
 </nav>
 <br /><br />
 
+
 <h2>Welcome, [[${user.getName()}]]</h2>
 
-<div class="container">
-    <div class="row">
-        <h1 class="text-center"> Daily Planner System </h1>
-    </div>
-  
-    
-   <div class="container">
-    <div class="row col-md-10">
-        <h2>List of Registered Users</h2>
-    </div> 
-</div>
+<br>
+
+ <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Registered Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+           <tr>
+               <td th:text = "${user.getName()}"></td>
+                
+                <td th:text = "${user.email}"></td>
+                 <td th:text = "${user.createdDate}"></td>
+                <td>
+                 <a class="btn btn-primary" th:href="@{/users/{id}/view(id=${user.id})}">View Todos</a>
+                <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
+                  <a class="btn btn-danger" th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a>
+                </td>
+       
+            </tr>
+        </tbody>
+    </table>
 
 
-    
-   
-</div>
 </body>
 </html>
