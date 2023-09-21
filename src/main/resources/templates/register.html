@@ -112,12 +112,15 @@
               <p th:errors = "*{address}" class="text-danger"
                  th:if="${#fields.hasErrors('address')}"></p>
             </div>
-            
-  
-     
-             
-             
-          </form>
+
+			<div class="form-group">
+			  <button class="btn btn-primary" type="submit">Register</button>
+			  <span>Already registered? <a th:href="@{/login}">Login here</a></span>
+			</div>
+
+
+
+					</form>
       </div>
     </div>
   </div>
