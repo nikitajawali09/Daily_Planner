@@ -65,15 +65,26 @@ public class AuthController {
 	}
 	
 	// handler method to handle edit student request
-			@PreAuthorize("hasAnyRole('ADMIN','USER')")
-			@GetMapping("/users/{id}/view")
-			public String view(@PathVariable("id") Long id, Model model) {
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@GetMapping("/users/{id}/view")
+	public String view(@PathVariable("id") Long id, Model model) {
 
-				System.out.println("todo id:"+id);
-				List<TodoDto> users = todoService.getUserTodoById(id);	
-				model.addAttribute("users", users);
-				return "todo-view";
-			}
+		System.out.println("todo id:" + id);
+		List<TodoDto> users = todoService.getUserTodoById(id);
+		model.addAttribute("users", users);
+		return "todo-view";
+	}
+	
+	// handler method to handle edit student request
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+		@GetMapping("/users/{id}/userview")
+		public String userview(@PathVariable("id") Long id, Model model) {
+
+			System.out.println("todo id:" + id);
+			List<TodoDto> users = todoService.getUserTodoById(id);
+			model.addAttribute("users", users);
+			return "user-todo";
+		}
 
 	// handler method to handle edit student request
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
