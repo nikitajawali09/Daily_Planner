@@ -143,13 +143,15 @@ public class TodoServiceImpl implements TodoService {
 	}
 
 	@Override
-	public TodoDto getUserTodoById(Long id) {
+	@Transactional
+	public List<TodoDto> getUserTodoById(Long id) {
 		
+		List<TodoDto> todoDtoList = null;
 		TodoDto todoDto = null;
-		//List<TodoDto> todoDtoList = null;
+		
 
 		StringBuilder sqlQuery = new StringBuilder(
-				"SELECT u.id,t.title,t.description,t.created_date,t.target_date FROM user_management.todos t inner join users u " + " on t.users_id=u.id where u.id=:id");
+				"SELECT u.id,t.title,t.description,t.created_date,t.target_date FROM user_management.todos t left join users u " + " on t.users_id=u.id where u.id=:id");
 
 		Query query = entityManager.createNativeQuery(sqlQuery.toString());
 		
@@ -158,27 +160,29 @@ public class TodoServiceImpl implements TodoService {
 			try {
 				
 			List<Object[]> obj = query.getResultList();
-			
+			todoDtoList = new ArrayList<>();
 			
 			if(!obj.isEmpty()) {
-				
+		
 				for (Object[] record : obj) {
-
+					
 					todoDto = new TodoDto();
 					todoDto.setUserId(Long.parseLong(String.valueOf(record[0])));
 					todoDto.setTitle(String.valueOf(record[1]));
 					todoDto.setDescription(String.valueOf(record[2]));
 					todoDto.setCreatedDate((Date)record[3]);
 					todoDto.setTargetDate((Date)record[4]);
-
+					todoDtoList.add(todoDto);
 				}
 				
 			}
 			
-			//return modelMapper.map(todoDto, TodoDto.class);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return todoDto;
+			System.out.println("Todo List:"+todoDtoList);
+			return todoDtoList;
+		
 	}
 }

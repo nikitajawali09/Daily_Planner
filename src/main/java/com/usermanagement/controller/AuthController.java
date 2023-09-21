@@ -95,6 +95,11 @@ public class AuthController {
 	public String login() {
 		return "login";
 	}
+	
+	@GetMapping("/contact")
+	public String contact() {
+		return "contact";
+	}
 
 	// handler method to handle list of users
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
@@ -124,10 +129,8 @@ public class AuthController {
 		public String view(@PathVariable("id") Long id, Model model) {
 
 			System.out.println("todo id:"+id);
-			TodoDto user = todoService.getUserTodoById(id);
-
-			System.out.println("todo user:"+user);
-			model.addAttribute("user", user);
+			List<TodoDto> users = todoService.getUserTodoById(id);	
+			model.addAttribute("users", users);
 			return "todo-view";
 		}
 
