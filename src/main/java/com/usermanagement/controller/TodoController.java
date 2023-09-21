@@ -83,7 +83,6 @@ public class TodoController {
 				return "redirect:/todos/createTodo?existingNoEmail";
 			}
 			
-			log.info("Exiting into AuthController :: hasErrors");
 			log.info("Entering into AuthController :: saveUser");
 			todoService.addTodo(todoDto);
 			log.info("Exiting into AuthController :: saveUser");

@@ -28,7 +28,7 @@ public class CustomerSuccessHandler implements AuthenticationSuccessHandler{
 		if(roles.orElse("").equals("ROLE_ADMIN")) {
 			response.sendRedirect("/users");		
 		}else if(roles.orElse("").equals("ROLE_USER")) {
-			response.sendRedirect("/todos/createTodo");	
+			response.sendRedirect("/user-view");	
 		}else {
 			response.sendRedirect("/error");
 		}

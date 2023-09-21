@@ -100,6 +100,12 @@ public class AuthController {
 	public String contact() {
 		return "contact";
 	}
+	
+	@PreAuthorize("hasRole('USER')")
+	@GetMapping("/user-view")
+	public String userView() {
+		return "user-view";
+	}
 
 	// handler method to handle list of users
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
