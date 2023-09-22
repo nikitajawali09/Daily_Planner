@@ -51,10 +51,9 @@
                 <td th:text = "${user.description}"></td>
                 <td th:text = "${user.createdDate}"></td>
                 <td th:text = "${user.targetDate}"></td>
-<!-- 	@GetMapping("/users/{id}/edit") -->
-			   <td><a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a> 
-<!-- 			   @PostMapping("/deleteTodoById/{id}") -->
-
+			  
+			   <td>
+			   <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a> 
 			   <a class="btn btn-danger" th:href="@{/todos/deleteTodoById/{id}(id=${user.userId})}">Delete</a>
 			   </td>
 
