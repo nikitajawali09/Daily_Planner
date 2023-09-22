@@ -107,6 +107,22 @@ public class AuthController {
 		return "edit-todo";
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@PostMapping("/todo/{id}")
+	public String updateTodo(@PathVariable("id") Long id, @Valid @ModelAttribute("user") TodoDto userDto,
+			BindingResult result, Model model) {
+
+		System.out.println("Inside updatetodo");
+//		if (result.hasErrors()) {
+//			System.out.println("Inside updateStudent error:"+result.getErrorCount());
+//			model.addAttribute("user", userDto);
+//			return "edit-user";
+//		}
+
+		userDto.setId(id);
+		todoService.updateTodo(userDto,id);
+		return "redirect:/users";
+	}
 	
 
 	// handler method to handle edit student form submit request
@@ -115,10 +131,12 @@ public class AuthController {
 	public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("user") UserDto userDto,
 			BindingResult result, Model model) {
 
-		if (result.hasErrors()) {
-			model.addAttribute("user", userDto);
-			return "edit-user";
-		}
+		System.out.println("Inside updateStudent");
+//		if (result.hasErrors()) {
+//			System.out.println("Inside updateStudent error:"+result.getErrorCount());
+//			model.addAttribute("user", userDto);
+//			return "edit-user";
+//		}
 
 		userDto.setId(id);
 		userService.updateUser(userDto);
