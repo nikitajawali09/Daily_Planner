@@ -134,6 +134,8 @@ public class AuthController {
 	public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("user") UserDto userDto,
 			BindingResult result, Model model) {
 
+		System.out.println("Inside updateStudent ::");
+		
 		User existingId = userRepository.findByUserId(id);
 
 		if (existingId.getEmail().equals(userDto.getEmail())) {

@@ -51,7 +51,7 @@ body {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/contact}">Contact</a>
+<!--                     <a class="nav-link active" aria-current="page" th:href="@{/contact}">Contact</a> -->
                 </li>
                   <li class="nav-item">
                      <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
@@ -83,7 +83,7 @@ body {
                  <td th:text = "${user.createdDate}"></td>
                 <td>
                  <a class="btn btn-primary" th:href="@{/users/{id}/userview(id=${user.id})}">View Todos</a>
-                <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
+                <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit-Details</a>
 <!--                   <a class="btn btn-danger" th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a> -->
                 </td>
        
