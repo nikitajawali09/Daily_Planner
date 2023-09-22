@@ -9,6 +9,12 @@
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
+<style>
+h2 {
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+</style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -17,35 +23,40 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      
+    </div>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
                 </li>
             </ul>
         </div>
-    </div>
 </nav>
+<br>
 <div class="container">
     <div class="row col-md-10">
-        <h2>List of Registered Users</h2>
+    <br>
+        <center><h2> <u>: List of Users :</u> </h2></center>
     </div>
+    <br><br>
     <table class="table table-bordered table-hover">
         <thead class="table-dark">
             <tr>
-                <th>Full Name</th>
+                <th>Name</th>
                 <th>Email</th>
-                <th>Registered Date</th>
-                <th>Action</th>
+                <th>Address</th>
+                <th>Registration date</th>
+                <th><center>Actions</center></th>
             </tr>
         </thead>
         <tbody>
             <tr th:each = "user : ${users}">
-               <td th:text = "${user.firstName}"></td>
-                
-                <td th:text = "${user.email}"></td>
-                 <td th:text = "${user.createdDate}"></td>
-                <td>
+					<td th:text="${user.firstName}"></td>
+					<td th:text="${user.email}"></td>
+					<td th:text="${user.address}"></td>
+					<td th:text="${user.createdDate}"></td>
+					<td>
                  <a class="btn btn-primary" th:href="@{/users/{id}/view(id=${user.id})}">View Todos</a>
                 <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
                   <a class="btn btn-danger" th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a>

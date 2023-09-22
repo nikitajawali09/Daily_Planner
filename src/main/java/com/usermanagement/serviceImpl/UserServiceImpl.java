@@ -233,6 +233,7 @@ public class UserServiceImpl implements UserService {
 			userDto.setFirstName(user.getName());
 			userDto.setEmail(user.getEmail());
 			userDto.setCreatedDate(user.getCreatedDate());
+			userDto.setAddress(user.getAddress());
 //			List<Todo> todoList = todoRepository.findUserId(userDto.getId());
 //			
 //			for (Todo todo : todoList) {
