@@ -127,10 +127,10 @@ public class TodoController {
 	public ResponseEntity<String> deleteTodoById(@PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: deleteTodoById");
 		
-		System.out.println("Todo delete Id:"+todoId);
+		
 		todoService.deleteTodo(todoId);
 		log.info("Exiting into TodoController :: deleteTodoById");
-		return ResponseEntity.ok("Todo deleted successfully!.");
+		return ResponseEntity.ok("Todo deleted successfully!!");
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")

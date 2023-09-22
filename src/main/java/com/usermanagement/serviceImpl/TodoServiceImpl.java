@@ -151,7 +151,7 @@ public class TodoServiceImpl implements TodoService {
 		
 
 		StringBuilder sqlQuery = new StringBuilder(
-				"SELECT u.id,t.title,t.description,t.created_date,t.target_date FROM user_management.todos t left join users u " + " on t.users_id=u.id where u.id=:id");
+				"SELECT t.id,t.title,t.description,t.created_date,t.target_date FROM user_management.todos t left join users u " + " on t.users_id=u.id where u.id=:id");
 
 		Query query = entityManager.createNativeQuery(sqlQuery.toString());
 		
@@ -181,7 +181,7 @@ public class TodoServiceImpl implements TodoService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-			System.out.println("Todo List:"+todoDtoList);
+		
 			return todoDtoList;
 		
 	}

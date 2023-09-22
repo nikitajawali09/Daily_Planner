@@ -69,7 +69,7 @@ public class AuthController {
 	@GetMapping("/users/{id}/view")
 	public String view(@PathVariable("id") Long id, Model model) {
 
-		System.out.println("todo id:" + id);
+	
 		List<TodoDto> users = todoService.getUserTodoById(id);
 		model.addAttribute("users", users);
 		return "todo-view";
@@ -80,7 +80,7 @@ public class AuthController {
 		@GetMapping("/users/{id}/userview")
 		public String userview(@PathVariable("id") Long id, Model model) {
 
-			System.out.println("todo id:" + id);
+			
 			List<TodoDto> users = todoService.getUserTodoById(id);
 			model.addAttribute("users", users);
 			return "user-todo";
