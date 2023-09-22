@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -148,14 +149,13 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("User", "id", user.getId()));
 
 		existingUser.setName(user.getFirstName());
-		//existingUser.setLastName(user.getLastName());
-		//existingUser.setLastName(user.getLastName());
+		
 		existingUser.setEmail(user.getEmail());
 		existingUser.setAddress(user.getAddress());
-		//existingUser.setUserName(user.getUserName());
-		
+	
 		
 		User updatedUser = userRepository.save(existingUser);
+  
 
 		return modelMapper.map(updatedUser, UserDto.class);
 	}

@@ -22,8 +22,11 @@ import com.usermanagement.dto.TodoDto;
 import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.User;
 import com.usermanagement.repository.UserRepository;
+import com.usermanagement.repository.UserRolesRepository;
 import com.usermanagement.service.TodoService;
 import com.usermanagement.service.UserService;
+
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @Controller
@@ -36,12 +39,15 @@ public class AuthController {
 	private TodoService todoService;
 	private UserDetailsService userDetailsService;
 	private UserRepository userRepository;
+	private UserRolesRepository userRolesRepository;
 
-	public AuthController(UserService userService,TodoService todoService,UserDetailsService userDetailsService,UserRepository userRepository) {
+	public AuthController(UserService userService,TodoService todoService,
+			UserDetailsService userDetailsService,UserRepository userRepository,UserRolesRepository userRolesRepository) {
 		this.userService = userService;
 		this.todoService=todoService;
 		this.userDetailsService=userDetailsService;
 		this.userRepository=userRepository;
+		this.userRolesRepository=userRolesRepository;
 
 	}
 		
@@ -131,8 +137,11 @@ public class AuthController {
 	// handler method to handle edit student form submit request
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@PostMapping("/users/{id}")
+	@Transactional
 	public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("user") UserDto userDto,
 			BindingResult result, Model model) {
+		
+		try {
 
 		System.out.println("Inside updateStudent ::");
 		
@@ -158,6 +167,17 @@ public class AuthController {
 		} else {
 			userService.updateUser(userDto);
 		}
+		
+		Long roleId = userRolesRepository.findRoleId(id);
+		
+		if(roleId == 2) {
+			return "redirect:/user-view";
+		}
+		
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return "redirect:/users";
 	}
 

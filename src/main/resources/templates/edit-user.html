@@ -73,6 +73,7 @@
 <!--                  th:if="${#fields.hasErrors('lastName')}"></p> -->
 <!--             </div> -->
 
+           <fieldset disabled>
             <div class="form-group mb-3">
               <label class="form-label">Email</label>
               <input
@@ -86,6 +87,7 @@
               <p th:errors = "*{email}" class="text-danger"
                  th:if="${#fields.hasErrors('email')}"></p>
             </div>
+             </fieldset>
 
 <!--             <div class="form-group mb-3"> -->
 <!--               <label class="form-label">Password</label> -->
