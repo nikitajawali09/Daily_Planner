@@ -2,6 +2,7 @@ package com.usermanagement.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,11 +35,13 @@ public class AuthController {
 	private UserService userService;
 	private TodoService todoService;
 	private UserDetailsService userDetailsService;
+	private UserRepository userRepository;
 
-	public AuthController(UserService userService,TodoService todoService,UserDetailsService userDetailsService) {
+	public AuthController(UserService userService,TodoService todoService,UserDetailsService userDetailsService,UserRepository userRepository) {
 		this.userService = userService;
 		this.todoService=todoService;
 		this.userDetailsService=userDetailsService;
+		this.userRepository=userRepository;
 
 	}
 		
@@ -131,15 +134,28 @@ public class AuthController {
 	public String updateStudent(@PathVariable("id") Long id, @Valid @ModelAttribute("user") UserDto userDto,
 			BindingResult result, Model model) {
 
-		System.out.println("Inside updateStudent");
-//		if (result.hasErrors()) {
-//			System.out.println("Inside updateStudent error:"+result.getErrorCount());
-//			model.addAttribute("user", userDto);
-//			return "edit-user";
-//		}
+		User existingId = userRepository.findByUserId(id);
 
-		userDto.setId(id);
-		userService.updateUser(userDto);
+		if (existingId.getEmail().equals(userDto.getEmail())) {
+
+			userDto.setId(id);
+
+		} else {
+
+			User existingEmail = userService.findUserByEmail(userDto.getEmail());
+
+			if (existingEmail != null && existingEmail.getEmail() != null && !existingEmail.getEmail().isEmpty()) {
+				result.rejectValue("email", null, "There is already an account registered with the same email");
+			}
+		}
+
+		if (result.hasErrors()) {
+			
+			model.addAttribute("user", userDto);
+			return "edit-user";
+		} else {
+			userService.updateUser(userDto);
+		}
 		return "redirect:/users";
 	}
 
