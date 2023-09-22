@@ -121,7 +121,7 @@ public class AuthController {
 
 		userDto.setId(id);
 		todoService.updateTodo(userDto,id);
-		return "redirect:/users";
+		return "redirect:/user-view";
 	}
 	
 
