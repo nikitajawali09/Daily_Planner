@@ -26,10 +26,10 @@ public class UserDto {
 	private String email;
 	
 	//@NotEmpty(message = "User password should not be null or empty")
-	@Size(min = 5, max = 20, message = "Password must be between 5 and 20 characters")
+	@Size(min = 5, max = 20, message = "Password must be between 5 to 20 characters")
 	private String password;
 	
-	@Size(min = 5, max = 20, message = "Confirm Password must be between 10 and 20 characters")
+	@Size(min = 5, max = 20, message = "Confirm Password must be between 5 to 20 characters")
 	//@NotEmpty(message = "User confirm password should not be null or empty")
 	private String confirmPassword;
 	
