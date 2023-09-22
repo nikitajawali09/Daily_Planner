@@ -71,6 +71,7 @@ body {
             <tr>
                 <th>Full Name</th>
                 <th>Email</th>
+                <th>Address</th>
                 <th>Registered Date</th>
                 <th>Action</th>
             </tr>
@@ -80,6 +81,7 @@ body {
                <td th:text = "${user.getName()}"></td>
                 
                 <td th:text = "${user.email}"></td>
+                 <td th:text = "${user.address}"></td>
                  <td th:text = "${user.createdDate}"></td>
                 <td>
                  <a class="btn btn-primary" th:href="@{/users/{id}/userview(id=${user.id})}">View Todos</a>
