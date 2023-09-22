@@ -3,7 +3,9 @@ package com.usermanagement.serviceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import com.usermanagement.dto.TodoDto;
+import com.usermanagement.dto.UserDto;
 import com.usermanagement.entities.Todo;
+import com.usermanagement.entities.User;
 import com.usermanagement.exception.ResourceNotFoundException;
 import com.usermanagement.repository.TodoRepository;
 import com.usermanagement.service.TodoService;
@@ -177,12 +179,27 @@ public class TodoServiceImpl implements TodoService {
 				
 			}
 			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 			return todoDtoList;
 		
+	}
+
+	@Override
+	@Transactional
+	public TodoDto updateTodoById(Long id) {
+		
+       Todo userDto = todoRepository.findById(id).get();
+		
+        TodoDto savedUserDto = new TodoDto();
+		savedUserDto.setId(userDto.getId());
+		savedUserDto.setTitle(userDto.getTitle());
+		savedUserDto.setDescription(userDto.getDescription());
+		savedUserDto.setTargetDate(userDto.getTargetDate());
+		
+		
+		return savedUserDto;
 	}
 }

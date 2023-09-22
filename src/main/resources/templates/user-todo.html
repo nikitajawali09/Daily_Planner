@@ -53,8 +53,9 @@
                 <td th:text = "${user.targetDate}"></td>
 			  
 			   <td>
-			   <a class="btn btn-warning" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a> 
-			   <a class="btn btn-danger" th:href="@{/todos/deleteTodoById/{id}(id=${user.userId})}">Delete</a>
+			   
+			   <a class="btn btn-warning" th:href="@{/editTodo/{id}(id=${user.userId})}">Edit-Todo</a> 
+			   <a class="btn btn-danger" th:href="@{/todos/deleteTodoById/{id}(id=${user.userId})}">Delete-Todo</a>
 			   </td>
 
 			</tr>

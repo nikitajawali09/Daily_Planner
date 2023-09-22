@@ -114,13 +114,14 @@ public class TodoController {
 	}
 
 	// Build Update Todo REST API
-//	@PutMapping("{id}")
-//	public ResponseEntity<TodoDto> updateTodo(@RequestBody TodoDto todoDto, @PathVariable("id") Long todoId) {
-//		log.info("Entering into TodoController :: updateTodo");
-//		TodoDto updatedTodo = todoService.updateTodo(todoDto, todoId);
-//		log.info("Exiting into TodoController :: updateTodo");
-//		return ResponseEntity.ok(updatedTodo);
-//	}
+	
+	@GetMapping("/updateTodoById/{id}")
+	public ResponseEntity<TodoDto> updateTodo(@RequestBody TodoDto todoDto, @PathVariable("id") Long todoId) {
+		log.info("Entering into TodoController :: updateTodo");
+		TodoDto updatedTodo = todoService.updateTodo(todoDto, todoId);
+		log.info("Exiting into TodoController :: updateTodo");
+		return ResponseEntity.ok(updatedTodo);
+	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/deleteTodoById/{id}")

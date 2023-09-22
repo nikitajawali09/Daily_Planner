@@ -97,6 +97,16 @@ public class AuthController {
 		return "edit-user";
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@GetMapping("/editTodo/{id}")
+	public String editTodo(@PathVariable("id") Long id, Model model) {
+
+		TodoDto user = todoService.updateTodoById(id);
+
+		model.addAttribute("user", user);
+		return "edit-todo";
+	}
+	
 	
 
 	// handler method to handle edit student form submit request
