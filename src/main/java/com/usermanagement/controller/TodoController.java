@@ -121,11 +121,13 @@ public class TodoController {
 //		log.info("Exiting into TodoController :: updateTodo");
 //		return ResponseEntity.ok(updatedTodo);
 //	}
-
-	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping("/deleteTodoById/{id}")
+	
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	@GetMapping("/deleteTodoById/{id}")
 	public ResponseEntity<String> deleteTodoById(@PathVariable("id") Long todoId) {
 		log.info("Entering into TodoController :: deleteTodoById");
+		
+		System.out.println("Todo delete Id:"+todoId);
 		todoService.deleteTodo(todoId);
 		log.info("Exiting into TodoController :: deleteTodoById");
 		return ResponseEntity.ok("Todo deleted successfully!.");
