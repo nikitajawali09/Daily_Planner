@@ -94,17 +94,6 @@ public class AuthController {
 			model.addAttribute("users", users);
 			return "user-todo";
 		}
-
-	// handler method to handle edit student request
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
-	@GetMapping("/users/{id}/edit")
-	public String editStudent(@PathVariable("id") Long id, Model model) {
-
-		UserDto user = userService.getStudentById(id);
-
-		model.addAttribute("user", user);
-		return "edit-user";
-	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN','USER')")
 	@GetMapping("/editTodo/{id}")
@@ -115,23 +104,46 @@ public class AuthController {
 		model.addAttribute("user", user);
 		return "edit-todo";
 	}
+
+	// handler method to handle edit student request
+		@PreAuthorize("hasAnyRole('ADMIN','USER')")
+		@GetMapping("/users/{id}/edit")
+		public String editStudent(@PathVariable("id") Long id, Model model) {
+
+			UserDto user = userService.getStudentById(id);
+
+			model.addAttribute("user", user);
+			return "edit-user";
+		}
 	
-	@PreAuthorize("hasAnyRole('ADMIN','USER')")
-	@PostMapping("/todo/{id}")
-	public String updateTodo(@PathVariable("id") Long id, @Valid @ModelAttribute("user") TodoDto userDto,
-			BindingResult result, Model model) {
+	
+	
+	
+		@PreAuthorize("hasAnyRole('ADMIN','USER')")
+		@PostMapping("/todo/{id}")
+		public String updateTodo(@PathVariable("id") Long id, @Valid @ModelAttribute("user") TodoDto userDto,
+				BindingResult result, Model model) {
 
-		System.out.println("Inside updatetodo");
-//		if (result.hasErrors()) {
-//			System.out.println("Inside updateStudent error:"+result.getErrorCount());
-//			model.addAttribute("user", userDto);
-//			return "edit-user";
-//		}
+			System.out.println("Inside updatetodo ::");
+//			if (result.hasErrors()) {
+//				System.out.println("Inside updateStudent error:"+result.getErrorCount());
+//				model.addAttribute("user", userDto);
+//				return "edit-user";
+//			}
+			
+			if (result.hasErrors()) {
+				System.out.println("Inside updateStudent error:"+result.getErrorCount());
+				model.addAttribute("user", userDto);
+				return "edit-todo";
+			} else {
+				userDto.setId(id);
+				todoService.updateTodo(userDto,id);
+				return "redirect:/user-view";
+			}
 
-		userDto.setId(id);
-		todoService.updateTodo(userDto,id);
-		return "redirect:/user-view";
-	}
+			
+			
+		}
 	
 
 	// handler method to handle edit student form submit request
