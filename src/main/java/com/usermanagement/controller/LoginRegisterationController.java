@@ -1,5 +1,7 @@
 package com.usermanagement.controller;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -10,8 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.usermanagement.dto.ContactDto;
 import com.usermanagement.dto.UserDto;
+import com.usermanagement.entities.Contact;
 import com.usermanagement.entities.User;
+import com.usermanagement.repository.ContactRepository;
 import com.usermanagement.service.UserService;
 
 import jakarta.validation.Valid;
@@ -23,8 +28,11 @@ public class LoginRegisterationController {
 	Logger log = LoggerFactory.getLogger(AuthController.class);
 
 	private UserService userService;
-	public LoginRegisterationController(UserService userService) {
+	private final ContactRepository contactRepository;
+	
+	public LoginRegisterationController(UserService userService,ContactRepository contactRepository) {
 		this.userService = userService;
+		this.contactRepository=contactRepository;
 
 	}
 	
@@ -42,6 +50,47 @@ public class LoginRegisterationController {
 		log.info("Exiting into AuthController :: login");
 		return "login";
 	}
+	
+	@GetMapping("/contact")
+	public String contact(Model model) {
+		
+		ContactDto contact = new ContactDto();
+		model.addAttribute("contact", contact);
+		System.out.println("contact here");
+		return "contact";
+	}
+	
+	@PostMapping("/contact/save")
+	public String contactSave(@Valid @ModelAttribute("contact") ContactDto contact, BindingResult result, Model model) {
+
+		try {
+
+			log.info("Entering into AuthController :: registration");
+			System.out.println("contact dto :"+contact);
+			
+			log.info("Entering into AuthController :: hasErrors");
+			if (result.hasErrors()) {
+				model.addAttribute("contact", contact);
+				return "/contact";
+			}else {
+				
+				Contact c = new Contact();
+				c.setName(contact.getName());
+				c.setEmail(contact.getEmail());
+				c.setCreatedDate(new Date());
+				c.setNumber(contact.getNumber());
+				c.setMessage(contact.getMessage());
+				contactRepository.save(c);
+				return "redirect:/contact?success";
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	
 	// handler method to handle user registration form request
 		@GetMapping("/register")
@@ -92,9 +141,6 @@ public class LoginRegisterationController {
 			return null;
 		}
 	
-	@GetMapping("/contact")
-	public String contact() {
-		return "contact";
-	}
+	
 
 }
