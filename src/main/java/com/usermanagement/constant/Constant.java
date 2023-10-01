@@ -7,5 +7,4 @@ public class Constant {
 	public static final String DATA="data";
 	public static final String DATA1="data1";
 	public static final String MESSAGE="message";
-	
 }
